@@ -24,6 +24,8 @@ import com.cgvsu.render_engine.Camera;
 public class GuiController {
 
     final private float TRANSLATION = 0.5F;
+    private boolean isStructure = false;
+    private boolean isLight = false;
 
     @FXML
     AnchorPane anchorPane;
@@ -114,5 +116,13 @@ public class GuiController {
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
         camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
+    }
+
+    public void loadStructure() {
+        isStructure = !isStructure;
+    }
+
+    public void loadLight() {
+        isLight = !isLight;
     }
 }
