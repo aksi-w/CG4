@@ -2,10 +2,13 @@ package com.cgvsu.render_engine;
 
 import java.util.ArrayList;
 
+import com.cgvsu.math.Matrix.Matrix4f;
 import com.cgvsu.math.Vector.Vector3f;
 import javafx.scene.canvas.GraphicsContext;
-import javax.vecmath.*;
 import com.cgvsu.model.Model;
+
+import javax.vecmath.Point2f;
+
 import static com.cgvsu.render_engine.GraphicConveyor.*;
 
 public class RenderEngine {

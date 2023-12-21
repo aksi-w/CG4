@@ -47,12 +47,12 @@ public class Vector3f {
         return (float) Math.sqrt(vector.getX() * vector.getX() + vector.getY() * vector.getY() + vector.getZ() * vector.getZ());
     }
 
-    public static Vector3f normalize(Vector3f vector) {
-        float length = lengthVector(vector);
+    public Vector3f normalize() {
+        float length = lengthVector(this);
         if (length > eps) {
-            float normalizedX = vector.getX() / length;
-            float normalizedY = vector.getY() / length;
-            float normalizedZ = vector.getZ() / length;
+            float normalizedX = this.getX() / length;
+            float normalizedY = this.getY() / length;
+            float normalizedZ = this.getZ() / length;
             return new Vector3f(normalizedX, normalizedY, normalizedZ);
         } else {
             throw new IllegalArgumentException("Деление на 0!");
@@ -81,12 +81,13 @@ public class Vector3f {
         return vector1.getX() * vector2.getX() + vector1.getY() * vector2.getY() + vector1.getZ() * vector2.getZ();
     }
 
-    public Vector3f cross(Vector3f other) {
-        float resX = this.y * other.z - this.z * other.y;
-        float resY = this.z * other.x - this.x * other.z;
-        float resZ = this.x * other.y - this.y * other.x;
+    public static Vector3f cross(Vector3f vector1, Vector3f vector2) {
+        float resX = vector1.getY() * vector2.getZ() - vector1.getZ() * vector2.getY();
+        float resY = vector1.getZ() * vector2.getX() - vector1.getX() * vector2.getZ();
+        float resZ = vector1.getX() * vector2.getY() - vector1.getY() * vector2.getX();
 
         return new Vector3f(resX, resY, resZ);
     }
+
 
 }

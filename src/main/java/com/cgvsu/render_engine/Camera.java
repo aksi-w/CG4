@@ -1,6 +1,8 @@
 package com.cgvsu.render_engine;
-import javax.vecmath.Vector3f;
-import javax.vecmath.Matrix4f;
+
+
+import com.cgvsu.math.Matrix.Matrix4f;
+import com.cgvsu.math.Vector.Vector3f;
 
 public class Camera {
 
@@ -40,11 +42,11 @@ public class Camera {
     }
 
     public void movePosition(final Vector3f translation) {
-        this.position.add(translation);
+        this.position = Vector3f.addition(position, translation);
     }
 
     public void moveTarget(final Vector3f translation) {
-        this.target.add(target);
+        this.target = Vector3f.addition(target, translation);
     }
 
     Matrix4f getViewMatrix() {
