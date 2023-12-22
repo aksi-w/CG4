@@ -1,6 +1,10 @@
 package com.cgvsu;
 
+import com.cgvsu.Scene.Scene;
+import com.cgvsu.math.Vector.Vector;
 import com.cgvsu.math.Vector.Vector3f;
+import com.cgvsu.model.ModelOnScene;
+import com.cgvsu.objWriter.ObjWriter;
 import com.cgvsu.objreader.IncorrectFileException;
 import com.cgvsu.render_engine.RenderEngine;
 import javafx.fxml.FXML;
@@ -9,18 +13,25 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
+
+import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
 import java.io.File;
+import java.util.ArrayList;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GuiController {
 
@@ -33,6 +44,7 @@ public class GuiController {
 
     @FXML
     private Canvas canvas;
+    Scene scene = new Scene();
 
     private Model mesh = null;
 
@@ -54,9 +66,9 @@ public class GuiController {
         KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
-
+            
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-            camera.setAspectRatio((float) (width / height));
+            scene.camera.setAspectRatio((float) (width / height));
 
             if (mesh != null) {
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
@@ -66,6 +78,7 @@ public class GuiController {
         timeline.getKeyFrames().add(frame);
         timeline.play();
     }
+
 
     @FXML
     private void onOpenModelMenuItemClick() {
@@ -83,10 +96,51 @@ public class GuiController {
         try {
             String fileContent = Files.readString(fileName);
             mesh = ObjReader.read(fileContent);
+            ModelOnScene model = new ModelOnScene(mesh);
+            scene.modelsList.add(model);
             //mesh.add(ObjReader.read(fileContent));
             // todo: обработка ошибок
         } catch (IncorrectFileException | IOException exception) {
 
+        }
+    }
+
+    public void onSaveModelMenuItemClick(ActionEvent actionEvent) {
+
+        /**JFileChooser fileChooser = new JFileChooser();
+        int userSelection = fileChooser.showSaveDialog(null);
+        fileChooser.setDialogTitle("Сохранить файл");
+        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Model (*.obj)", "obj"));
+        //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (.obj)", ".obj"));
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+            File fileToSave = fileChooser.getSelectedFile();
+
+            try {
+                Model model;
+                model = scene.modelsList.get(0);
+                ObjWriter.write(fileToSave, model);
+                JOptionPane.showMessageDialog(null, "Модель успешно сохранена");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Ошибка при сохранении модели: " + e.getMessage(),
+                        "Ошибка", JOptionPane.ERROR_MESSAGE);
+            }
+        }*/
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
+        fileChooser.setTitle("Сохранить файл");
+        File selectedFile = fileChooser.showSaveDialog(canvas.getScene().getWindow());
+        if(selectedFile != null) {
+            try {
+                Model model;
+                model = scene.modelsList.get(0);
+                ObjWriter.write(selectedFile, model);
+                JOptionPane.showMessageDialog(null, "Модель успешно сохранена");
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Ошибка при сохранении модели: " + e.getMessage(),
+                        "Ошибка", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -127,5 +181,6 @@ public class GuiController {
     public void loadLight() {
         isLight = !isLight;
     }
+
 
 }

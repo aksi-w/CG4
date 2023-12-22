@@ -22,18 +22,19 @@ public class GraphicConveyor {
     }
 
     public static Matrix4f lookAt(Vector3f eye, Vector3f target, Vector3f up) {
-        Vector3f forward = Vector3f.subtraction(target, eye).normalize();
-        Vector3f right = Vector3f.cross(up, forward).normalize();
-        Vector3f newUp = Vector3f.cross(forward, right).normalize();
+        Vector3f resZ = Vector3f.subtraction(target, eye).normalize();
+        Vector3f resX = Vector3f.cross(up, resZ).normalize();
+        Vector3f resY = Vector3f.cross(resZ, resX).normalize();
 
-        float[][] matrixData = new float[][]{
-                {right.getX(), newUp.getX(), -forward.getX(), 0},
-                {right.getY(), newUp.getY(), -forward.getY(), 0},
-                {right.getZ(), newUp.getZ(), -forward.getZ(), 0},
-                {-Vector3f.scalar(right, eye), -Vector3f.scalar(newUp, eye), Vector3f.scalar(forward, eye), 1}
+
+        float[][] matrix = new float[][]{
+                {resX.getX(), resY.getX(), resZ.getX(), 0},
+                {resX.getY(), resY.getY(), resZ.getY(), 0},
+                {resX.getZ(), resY.getZ(), resZ.getZ(), 0},
+                {-Vector3f.scalar(resX, eye), -Vector3f.scalar(resY, eye), -Vector3f.scalar(resZ, eye), 1}
         };
 
-        return new Matrix4f(matrixData);
+        return new Matrix4f(matrix);
     }
 
 
@@ -42,6 +43,7 @@ public class GraphicConveyor {
             final float aspectRatio,
             final float nearPlane,
             final float farPlane) {
+
         float tangentMinusOnDegree = (float) (1.0F / (Math.tan(fov * 0.5F)));
         return new Matrix4f(new float[][]{
                 {tangentMinusOnDegree / aspectRatio, 0, 0, 0},
