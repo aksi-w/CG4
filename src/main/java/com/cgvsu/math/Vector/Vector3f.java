@@ -1,11 +1,16 @@
 package com.cgvsu.math.Vector;
 
+import java.util.List;
+
 public class Vector3f {
 
-    private final float x;
-    private final float y;
-    private final float z;
+    private float x;
+    private float y;
+    private float z;
     private static final float eps = 1e-7f;
+
+    public Vector3f() {
+    }
 
     public Vector3f(float x, float y, float z) {
         this.x = x;
@@ -89,5 +94,52 @@ public class Vector3f {
         return new Vector3f(resX, resY, resZ);
     }
 
+    public static Vector3f fromTwoPoints(Vector3f vertex1, Vector3f vertex2) {
+        return new Vector3f(vertex2.x - vertex1.x,
+                vertex2.y - vertex1.y,
+                vertex2.z - vertex1.z);
+    }
 
+    public float length() {
+        return (float) Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
+    }
+
+    public static Vector3f sum(List<Vector3f> vectors) {
+        final var result = new Vector3f();
+
+        vectors.forEach(result::add);
+
+        return result;
+    }
+
+    public void add(Vector3f t1, Vector3f t2) {
+        if (t1 == null || t2 == null) {
+            throw new IllegalArgumentException("Vector3f can not be null");
+        }
+
+        this.x = t1.x + t2.x;
+        this.y = t1.y + t2.y;
+        this.z = t1.z + t2.z;
+    }
+
+    public void add(Vector3f t1) {
+        if (t1 == null) {
+            throw new IllegalArgumentException("Vector3f can not be null");
+        }
+
+        this.x += t1.x;
+        this.y += t1.y;
+        this.z += t1.z;
+    }
+
+    public Vector3f divide(float num) {
+        if (isEqual(num, 0))
+            throw new ArithmeticException("Division by zero");
+
+        return new Vector3f(x / num, y / num, z / num);
+    }
+
+    public static boolean isEqual(float x, float y){
+        return Math.abs(x-y) < eps;
+    }
 }
