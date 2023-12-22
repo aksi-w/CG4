@@ -10,10 +10,16 @@ public class Matrix4f {
         return this.matrix[i][j];
     }
 
+    public float[][] getMatrix() {
+        return this.matrix;
+    }
 
-    public Matrix4f(float[][] matrix) { // тут нврн копия и нужна
+
+
+    public Matrix4f(float[][] matrix) {
         this.matrix = matrix;
     }
+
 
     public boolean equals(Matrix4f otherMatrix) {
         for (int i = 0; i < matrix.length; i++) {
@@ -26,7 +32,7 @@ public class Matrix4f {
         return true;
     }
 
-    public Matrix4f addition(Matrix4f matrix1, Matrix4f matrix2) {
+    public static Matrix4f addition(Matrix4f matrix1, Matrix4f matrix2) {
         float[][] res = new float[4][4];
         for (int i = 0; i < res.length; i++) {
             for (int j = 0; j < res.length; j++) {
@@ -36,7 +42,7 @@ public class Matrix4f {
         return new Matrix4f(res);
     }
 
-    public Matrix4f subtraction(Matrix4f matrix1, Matrix4f matrix2) {
+    public static Matrix4f subtraction(Matrix4f matrix1, Matrix4f matrix2) {
         float[][] res = new float[4][4];
         for (int i = 0; i < res.length; i++) {
             for (int j = 0; j < res.length; j++) {
@@ -46,7 +52,7 @@ public class Matrix4f {
         return new Matrix4f(res);
     }
 
-    public Matrix4f multiplication(Matrix4f matrix1, Matrix4f matrix2) {
+    public static Matrix4f multiplication(Matrix4f matrix1, Matrix4f matrix2) {
         float[][] res = new float[4][4];
         for (int i = 0; i < res.length; i++) {
             for (int j = 0; j < res.length; j++) {
@@ -58,7 +64,7 @@ public class Matrix4f {
         return new Matrix4f(res);
     }
 
-    public Matrix4f transposition(Matrix4f matrix) {
+    public static Matrix4f transposition(Matrix4f matrix) {
         float[][] res = new float[4][4];
         for (int i = 0; i < res.length; i++) {
             for (int j = 0; j < res.length; j++) {
