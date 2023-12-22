@@ -17,19 +17,19 @@ public class ObjWriter {
     private static final String OBJ_NORMAL_TOKEN = "vn";
     private static final String OBJ_FACE_TOKEN = "f";
 
-    public static void write(String fileName, Model model) {
+    public static void write(File file, Model model) {
         if (model == null || model.isEmpty()) {
             throw new IllegalArgumentException("Invalid model for writing");
         }
 
-        File file = new File(fileName);
+        //File file = new File(fileName);
 
         try {
             if (file.createNewFile()) {
                 System.out.println("File created");
             }
         } catch (IOException e) {
-            throw new ObjWriterException("Error creating the file: " + fileName + " " + e.getMessage());
+            throw new ObjWriterException("Error creating the file: " + " " + e.getMessage());
         }
 
         try (PrintWriter printWriter = new PrintWriter(file)) {
@@ -38,9 +38,27 @@ public class ObjWriter {
             writeNormals(printWriter, model.getNormals());
             writePolygons(printWriter, model.getPolygons());
         } catch (IOException e) {
-            throw new ObjWriterException("Error writing to file: " + fileName + " " + e.getMessage());
+            throw new ObjWriterException("Error writing to file: " + " " + e.getMessage());
         }
     }
+
+    /**public static ArrayList<String> write(Model mesh) {
+        ArrayList<String> listFileContent = new ArrayList<>();
+
+        writeVertices(listFileContent,mesh.vertices);
+        listFileContent.add("# " + mesh.vertices.size() + " vertices");
+
+        writeTextureVertices(mesh.textureVertices, listFileContent);
+        listFileContent.add("# " + mesh.textureVertices.size() + " texture coordinates");
+
+        writeNormals(mesh.normals, listFileContent);
+        listFileContent.add("# " + mesh.normals.size() + " vertices");
+
+        writePolygons(mesh.polygons, listFileContent);
+        listFileContent.add("# " + mesh.polygons.size() + " polygons");
+        return listFileContent;
+    }*/
+
     protected static void writeVertices(PrintWriter pw, List<Vector3f> vertices) throws IOException {
         for (Vector3f vertex: vertices) {
             pw.println(OBJ_VERTEX_TOKEN + " " + vertex.getX() + " " + vertex.getY() + " " + vertex.getZ());
