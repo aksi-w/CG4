@@ -1,16 +1,16 @@
 package com.cgvsu.rasterization;
 
-public class Color {
-    public static final Color RED = new Color(1, 0, 0);
-    public static final Color GREEN = new Color(0, 1, 0);
-    public static final Color BLUE = new Color(0, 0, 1);
+public class Colorr {
+    public static final Colorr RED = new Colorr(1, 0, 0);
+    public static final Colorr GREEN = new Colorr(0, 1, 0);
+    public static final Colorr BLUE = new Colorr(0, 0, 1);
 
 
     private final double R;
     private final double G;
     private final double B;
 
-    public Color(double r, double g, double b) {
+    public Colorr(double r, double g, double b) {
 
         if (!(r < 0.0D) && !(r > 1.0D)) {
             if (!(g < 0.0D) && !(g > 1.0D)) {

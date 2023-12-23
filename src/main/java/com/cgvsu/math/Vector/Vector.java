@@ -1,6 +1,10 @@
 package com.cgvsu.math.Vector;
 
 public abstract class Vector {
+    public Vector() {
+
+    }
+
     public static class VectorException extends Exception {
         public VectorException(String message) {
             super(message);
@@ -8,7 +12,7 @@ public abstract class Vector {
     }
 
     static final float EPS = 1e-5f;
-    protected final int size;
+    protected int size;
     protected float[] vector;
 
     public Vector(float[] vector, final int size) {

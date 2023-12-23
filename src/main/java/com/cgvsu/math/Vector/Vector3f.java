@@ -2,7 +2,7 @@ package com.cgvsu.math.Vector;
 
 import java.util.List;
 
-public class Vector3f {
+public class Vector3f extends Vector implements IVector {
 
     private float x;
     private float y;
@@ -10,9 +10,11 @@ public class Vector3f {
     private static final float eps = 1e-7f;
 
     public Vector3f() {
+        super();
     }
 
     public Vector3f(float x, float y, float z) {
+        this();
         this.x = x;
         this.y = y;
         this.z = z;
@@ -28,6 +30,16 @@ public class Vector3f {
 
     public float getZ() {
         return z;
+    }
+
+    @Override
+    public float[] getValues() {
+        return new float[0];
+    }
+
+    @Override
+    public int getSize() {
+        return 0;
     }
 
     public boolean equals(Vector3f other) {

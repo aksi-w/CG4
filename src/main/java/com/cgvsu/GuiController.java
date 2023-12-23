@@ -6,7 +6,10 @@ import com.cgvsu.math.Vector.Vector3f;
 import com.cgvsu.model.ModelOnScene;
 import com.cgvsu.objWriter.ObjWriter;
 import com.cgvsu.objreader.IncorrectFileException;
+import com.cgvsu.rasterization.DrawUtilsJavaFX;
+import com.cgvsu.rasterization.GraphicsUtils;
 import com.cgvsu.render_engine.RenderEngine;
+import com.cgvsu.render_engine.RenderRasterization;
 import javafx.fxml.FXML;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
@@ -19,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
+import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,6 +42,7 @@ public class GuiController {
     final private float TRANSLATION = 0.5F;
     private boolean isStructure = false;
     public static boolean isLight = false;
+    private BufferedImage image = null;
 
     @FXML
     AnchorPane anchorPane;
@@ -59,6 +64,7 @@ public class GuiController {
     private void initialize() {
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
+        GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
 
         timeline = new Timeline();
         timeline.setCycleCount(Animation.INDEFINITE);
@@ -71,7 +77,15 @@ public class GuiController {
             scene.camera.setAspectRatio((float) (width / height));
 
             if (mesh != null) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+                try {
+                    RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera, mesh, (int) width, (int) height, image);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                if (isStructure) {
+                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
+                }
+
             }
         });
 

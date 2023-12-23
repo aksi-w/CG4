@@ -70,7 +70,7 @@ public class GraphicConveyor {
     public static Point2f vertexToPoint(final Vector3f vertex, final int width, final int height) {
         return new Point2f(vertex.getX() * width + width / 2.0F, -vertex.getY() * height + height / 2.0F);
     }
-    public static Point3f vertexToPoint3f(final javax.vecmath.Vector3f vertex, final int width, final int height) {
-        return new Point3f(vertex.x * width + width / 2.0F, -vertex.y * height + height / 2.0F, vertex.z * width + width / 2.0F);
+    public static Point3f vertexToPoint3f(final Vector3f vertex, final int width, final int height) {
+        return new Point3f(vertex.getX() * width + width / 2.0F, -vertex.getY() * height + height / 2.0F, vertex.getZ() * width + width / 2.0F);
     }
 }
