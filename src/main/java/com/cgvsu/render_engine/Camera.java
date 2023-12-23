@@ -4,7 +4,6 @@ import com.cgvsu.math.Matrix.Matrix3f;
 import com.cgvsu.math.Matrix.Matrix4f;
 import com.cgvsu.math.Vector.Vector3f;
 
-import java.awt.geom.AffineTransform;
 
 public class Camera {
 

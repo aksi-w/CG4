@@ -3,6 +3,7 @@ package com.cgvsu;
 import com.cgvsu.Scene.Scene;
 import com.cgvsu.math.Vector.Vector;
 import com.cgvsu.math.Vector.Vector3f;
+import com.cgvsu.math.affinetransf.AffineTransf;
 import com.cgvsu.model.ModelOnScene;
 import com.cgvsu.objWriter.ObjWriter;
 import com.cgvsu.objreader.IncorrectFileException;
@@ -53,6 +54,9 @@ public class GuiController {
 
     private Model mesh = null;
 
+    private AffineTransf affineTransf = new AffineTransf();
+
+
     private Camera camera = new Camera(
             new Vector3f(0, 00, 100),
             new Vector3f(0, 0, 0),
@@ -61,7 +65,7 @@ public class GuiController {
     private Timeline timeline;
 
     @FXML
-    private void initialize() {
+    private void initialize() {// Полина добавила и Даше еще надо исправить
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
         GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
@@ -78,6 +82,7 @@ public class GuiController {
 
             if (mesh != null) {
                 try {
+                    mesh = affineTransf.transformModel(mesh); // добавила Полина
                     RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera, mesh, (int) width, (int) height, image);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -85,7 +90,6 @@ public class GuiController {
                 if (isStructure) {
                     RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh, (int) width, (int) height);
                 }
-
             }
         });
 
@@ -169,17 +173,17 @@ public class GuiController {
     }
 
     @FXML
-    public void handleCameraLeft(ActionEvent actionEvent) {
+    public void handleCameraLeft(ActionEvent actionEvent) { // дописать камеру
         camera.movePosition(new Vector3f(TRANSLATION, 0, 0));
     }
 
     @FXML
-    public void handleCameraRight(ActionEvent actionEvent) {
+    public void handleCameraRight(ActionEvent actionEvent) { // дописать камеру
         camera.movePosition(new Vector3f(-TRANSLATION, 0, 0));
     }
 
     @FXML
-    public void handleCameraUp(ActionEvent actionEvent) {
+    public void handleCameraUp(ActionEvent actionEvent) { // дописать
         camera.movePosition(new Vector3f(0, TRANSLATION, 0));
     }
 
@@ -194,6 +198,24 @@ public class GuiController {
 
     public void loadLight() {
         isLight = !isLight;
+    }
+
+    public void updateScale(float scaleX, float scaleY, float scaleZ) { // Полина добавила
+        affineTransf.setSx(scaleX);
+        affineTransf.setSy(scaleY);
+        affineTransf.setSz(scaleZ);
+    }
+
+    public void updateRotation(float rotateX, float rotateY, float rotateZ) { // Полина добавила
+        affineTransf.setRx(rotateX);
+        affineTransf.setRy(rotateY);
+        affineTransf.setRz(rotateZ);
+    }
+
+    public void updateTranslation(float translateX, float translateY, float translateZ) { // Полина добавила
+        affineTransf.setTx(translateX);
+        affineTransf.setTy(translateY);
+        affineTransf.setTz(translateZ);
     }
 
 
