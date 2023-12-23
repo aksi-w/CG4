@@ -37,7 +37,7 @@ public class GuiController {
 
     final private float TRANSLATION = 0.5F;
     private boolean isStructure = false;
-    private boolean isLight = false;
+    public static boolean isLight = false;
 
     @FXML
     AnchorPane anchorPane;
