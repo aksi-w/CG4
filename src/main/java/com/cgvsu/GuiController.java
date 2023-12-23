@@ -66,7 +66,7 @@ public class GuiController {
         KeyFrame frame = new KeyFrame(Duration.millis(15), event -> {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
-            
+
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             scene.camera.setAspectRatio((float) (width / height));
 
@@ -108,24 +108,24 @@ public class GuiController {
     public void onSaveModelMenuItemClick(ActionEvent actionEvent) {
 
         /**JFileChooser fileChooser = new JFileChooser();
-        int userSelection = fileChooser.showSaveDialog(null);
-        fileChooser.setDialogTitle("Сохранить файл");
-        fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Model (*.obj)", "obj"));
-        //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (.obj)", ".obj"));
+         int userSelection = fileChooser.showSaveDialog(null);
+         fileChooser.setDialogTitle("Сохранить файл");
+         fileChooser.addChoosableFileFilter(new FileNameExtensionFilter("Model (*.obj)", "obj"));
+         //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (.obj)", ".obj"));
 
-        if (userSelection == JFileChooser.APPROVE_OPTION) {
-            File fileToSave = fileChooser.getSelectedFile();
+         if (userSelection == JFileChooser.APPROVE_OPTION) {
+         File fileToSave = fileChooser.getSelectedFile();
 
-            try {
-                Model model;
-                model = scene.modelsList.get(0);
-                ObjWriter.write(fileToSave, model);
-                JOptionPane.showMessageDialog(null, "Модель успешно сохранена");
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Ошибка при сохранении модели: " + e.getMessage(),
-                        "Ошибка", JOptionPane.ERROR_MESSAGE);
-            }
-        }*/
+         try {
+         Model model;
+         model = scene.modelsList.get(0);
+         ObjWriter.write(fileToSave, model);
+         JOptionPane.showMessageDialog(null, "Модель успешно сохранена");
+         } catch (Exception e) {
+         JOptionPane.showMessageDialog(null, "Ошибка при сохранении модели: " + e.getMessage(),
+         "Ошибка", JOptionPane.ERROR_MESSAGE);
+         }
+         }*/
 
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
