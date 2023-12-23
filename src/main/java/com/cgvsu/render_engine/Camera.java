@@ -1,7 +1,5 @@
 package com.cgvsu.render_engine;
 
-
-import com.cgvsu.math.Affine.AffineTransformation;
 import com.cgvsu.math.Matrix.Matrix3f;
 import com.cgvsu.math.Matrix.Matrix4f;
 import com.cgvsu.math.Vector.Vector3f;
@@ -161,6 +159,5 @@ public class Camera {
     private float aspectRatio;
     private float nearPlane;
     private float farPlane;
-    private final AffineTransformation affineTransform = new AffineTransformation();
 
 }
