@@ -42,4 +42,14 @@ public abstract class Vector {
         this.vector = newVector;
         this.size = size;
     }
+
+    public float vectorLength(final IVector v1) {
+        float tmp = 0;
+
+        for (int i = 0; i < v1.getSize(); i++) {
+            tmp = tmp + v1.getValues()[i] * v1.getValues()[i];
+        }
+
+        return (float) Math.sqrt(tmp);
+    }
 }
