@@ -22,6 +22,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -318,4 +319,15 @@ public class GuiController {
         transformModel = affineTransf.transformModel(transformModel);
     }
 
+    @FXML
+    private void handleMouseScroll(ScrollEvent event) {
+        double delta = event.getDeltaY();
+        camera.get(numberCamera).handleMouseScroll((float) delta);
+    }
+
+    @FXML
+    private void handleKeyPress(KeyEvent event) {
+        String direction = event.getCode().toString();
+        camera.get(numberCamera).handleKeyPress(direction);
+    }
 }
