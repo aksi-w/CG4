@@ -23,6 +23,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -38,6 +39,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
@@ -68,6 +70,7 @@ public class GuiController {
     private ComboBox<String> chooseModel;
     @FXML
     private ComboBox<String> chooseCamera;
+    private String selectedValue;
     private String selectedValueCamera;
     private final List<Model> mesh = new ArrayList<>();
     private final List<String> names = new ArrayList<>();
@@ -104,6 +107,13 @@ public class GuiController {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
+            canvas.setOnScroll(scrollEvent -> {
+                handleMouseScroll(scrollEvent);
+            });
+            canvas.setOnMousePressed(mouseEvent -> {
+                mousePressed(mouseEvent);
+            });
+
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             scene.camera.setAspectRatio((float) (width / height));
 
@@ -131,7 +141,7 @@ public class GuiController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Загрузить файл");
 
-        File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(canvas.getScene().getWindow());
         if (file == null) {
             return;
         }
@@ -142,8 +152,8 @@ public class GuiController {
         try {
             String fileContent = Files.readString(fileName);
             mesh.add(ObjReader.read(fileContent));
-            ModelOnScene model = new ModelOnScene((Model) mesh);
-            scene.modelsList.add(model);
+            //ModelOnScene model = new ModelOnScene((Model) mesh);
+            //scene.modelsList.add(model);
             names.add(file.getName());
             chooseModel.getItems().add(file.getName());
 
@@ -161,8 +171,8 @@ public class GuiController {
          model.get(model.size() - 1).trianglePolygons.get(i).getTextureVertexIndices().addAll(model.get(model.size() - 1).polygons.get(i).getTextureVertexIndices());
          model.get(model.size() - 1).trianglePolygons.get(i).getNormalIndices().addAll(model.get(model.size() - 1).polygons.get(i).getNormalIndices());
          }
-         ArrayList<Polygon> triangles = TriangulatedModelWithCorrectNormal.triangulatePolygons(model.get(model.size() - 1).trianglePolygons);
-         model.get(model.size() - 1).setTrianglePolygons(triangles);
+        ArrayList<Polygon> triangles = Triangulation.triangulation(model.get(model.size() - 1).trianglePolygons);
+        mesh.get(mesh.size() - 1).setTrianglePolygons(triangles);
 
          /**try {
          String fileContent = Files.readString(fileName);
@@ -267,6 +277,14 @@ public class GuiController {
             chooseCamera.getItems().remove(numberCamera + 1);
         }
     }
+    public void deleteMesh() {
+        if (mesh.size() > 1) {
+            if (numberMesh == mesh.size() - 1) numberMesh--;
+            mesh.remove(mesh.size() - 1);
+            names.remove(mesh.size() - 1);
+            chooseModel.getItems().remove(numberMesh + 1);
+        }
+    }
 
     @FXML
     public void choosingCamera(ActionEvent actionEvent) {
@@ -274,6 +292,14 @@ public class GuiController {
         for (int i = 0; i < namesCamera.size(); i++) {
             if (namesCamera.get(i).equals(selectedValueCamera)) {
                 numberCamera = i;
+            }
+        }
+    }
+    public void choosingActualModel(ActionEvent actionEvent) {
+        selectedValue = chooseModel.getSelectionModel().getSelectedItem();
+        for (int i = 0; i < names.size(); i++) {
+            if (names.get(i).equals(selectedValue)) {
+                numberMesh = i;
             }
         }
 
@@ -329,5 +355,66 @@ public class GuiController {
     private void handleKeyPress(KeyEvent event) {
         String direction = event.getCode().toString();
         camera.get(numberCamera).handleKeyPress(direction);
+    }
+
+    public void zoom(ScrollEvent scrollEvent) {
+        double delta = scrollEvent.getDeltaY();
+        Vector3f cameraPositionInCoords = scene.getCameraPosition();
+        if (delta < 0) {
+            if (cameraPositionInCoords.getX() > cameraPositionInCoords.getY()
+                    && cameraPositionInCoords.getX() > cameraPositionInCoords.getZ()) {
+                scene.getCamera().movePosition(new Vector3f(TRANSLATION, 0, 0));
+            } else if (cameraPositionInCoords.getY() > cameraPositionInCoords.getX()
+                    && cameraPositionInCoords.getY() > cameraPositionInCoords.getZ()) {
+                scene.getCamera().movePosition(new Vector3f(0, TRANSLATION, 0));
+            } else if (cameraPositionInCoords.getZ() > cameraPositionInCoords.getX()
+                    && cameraPositionInCoords.getZ() > cameraPositionInCoords.getY()) {
+                scene.getCamera().movePosition(new Vector3f(0, 0, TRANSLATION));
+            }
+        } else {
+            if (cameraPositionInCoords.getX() > cameraPositionInCoords.getY()
+                    && cameraPositionInCoords.getX() > cameraPositionInCoords.getZ()) {
+                scene.getCamera().movePosition(new Vector3f(-TRANSLATION, 0, 0));
+            } else if (cameraPositionInCoords.getY() > cameraPositionInCoords.getX()
+                    && cameraPositionInCoords.getY() > cameraPositionInCoords.getZ()) {
+                scene.getCamera().movePosition(new Vector3f(0, -TRANSLATION, 0));
+            } else if (cameraPositionInCoords.getZ() > cameraPositionInCoords.getX()
+                    && cameraPositionInCoords.getZ() > cameraPositionInCoords.getY()) {
+                scene.getCamera().movePosition(new Vector3f(0, 0, -TRANSLATION));
+            }
+        }
+    }
+    private void mousePressed(MouseEvent mouseEvent) {
+        AtomicReference<Double> startX = new AtomicReference<>(mouseEvent.getX());
+        AtomicReference<Double> startY = new AtomicReference<>(mouseEvent.getY());
+
+        canvas.setOnMouseDragged(mouseEvent1 -> {
+            double endX = mouseEvent1.getX();
+            double endY = mouseEvent1.getY();
+            double dx = startX.get() - endX;
+            double dy = endY - startY.get();
+            double dz = dx;
+
+            if (scene.getCamera().getPosition().getZ() < 0) {
+                dx *= -1;
+            }
+
+            if (scene.getCamera().getPosition().getX() > 0) {
+                dz *= -1;
+            }
+
+            if (Math.abs(dy) > Math.abs(dx)) {
+                dz *= 0;
+            }
+
+            startX.set(endX);
+            startY.set(endY);
+
+            scene.getCamera().movePosition(
+                    new Vector3f((float) dx * 0.01F,
+                            (float) dy * 0.01F,
+                            (float) dz * 0.01F)
+            );
+        });
     }
 }
