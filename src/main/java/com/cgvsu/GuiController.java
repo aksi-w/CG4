@@ -42,6 +42,7 @@ import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -49,7 +50,7 @@ public class GuiController {
 
     final private float TRANSLATION = 0.5F;
     private boolean isStructure = false;
-    public static boolean isLight = false;
+    public static boolean isLight = true;
     private BufferedImage image = null;
 
     @FXML
@@ -66,7 +67,7 @@ public class GuiController {
     private ComboBox<String> chooseModel;
     @FXML
     private ComboBox<String> chooseCamera;
-
+    private String selectedValueCamera;
     private final List<Model> mesh = new ArrayList<>();
     private final List<String> names = new ArrayList<>();
     private final List<String> namesCamera = new ArrayList<>();
@@ -227,6 +228,55 @@ public class GuiController {
     public void loadLight() {
         isLight = !isLight;
     }
+    @FXML
+    private void loadTexture() throws IOException {
+
+        if (!mesh.get(numberMesh).isTexture) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG (*.jpg)", "*.jpg"));
+            fileChooser.setTitle("Загрузить текстуру");
+            File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+
+            if (file == null) {
+                return;
+            }
+            image = ImageIO.read(file);
+        }
+        mesh.get(numberMesh).isTexture = !mesh.get(numberMesh).isTexture;
+
+    }
+
+    @FXML
+    public void addCamera() {
+        camera.add(new Camera(
+                new Vector3f(0, 0, 100),
+                new Vector3f(0, 0, 0),
+                1.0F, 1, 0.01F, 100));
+        numberCamera++;
+        namesCamera.add(String.valueOf(numberCamera));
+        chooseCamera.getItems().add(String.valueOf(numberCamera));
+    }
+
+    @FXML
+    public void deleteCamera() {
+        if (camera.size() > 1) {
+            if (numberCamera == camera.size() - 1) numberCamera--;
+            camera.remove(camera.size() - 1);
+            names.remove(camera.size() - 1);
+            chooseCamera.getItems().remove(numberCamera + 1);
+        }
+    }
+
+    @FXML
+    public void choosingCamera(ActionEvent actionEvent) {
+        selectedValueCamera = chooseCamera.getSelectionModel().getSelectedItem();
+        for (int i = 0; i < namesCamera.size(); i++) {
+            if (namesCamera.get(i).equals(selectedValueCamera)) {
+                numberCamera = i;
+            }
+        }
+
+    }
 
 //    public void updateScale(float scaleX, float scaleY, float scaleZ) {
 //        affineTransf.setSx(scaleX);
@@ -247,6 +297,7 @@ public class GuiController {
 //        affineTransf.setTz(translateZ);
 //    }
 
+
     public void transform(float scaleX, float scaleY, float scaleZ,
                           float rotateX, float rotateY, float rotateZ,
                           float translateX, float translateY, float translateZ) { // тут сами изменнения задаются (Для Дианы)
@@ -265,27 +316,6 @@ public class GuiController {
         }
 
         transformModel = affineTransf.transformModel(transformModel);
-
-        renderTransformedModel();
-    }
-    private void renderTransformedModel() { /// это для отображение измененной модели (Для Дианы)
-        double width = canvas.getWidth();
-        double height = canvas.getHeight();
-
-        canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-        scene.camera.setAspectRatio((float) (width / height));
-
-        if (transformModel != null) {
-            try {
-                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera.get(numberCamera), transformModel, (int) width, (int) height, image);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            if (isStructure) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera.get(numberCamera), transformModel, (int) width, (int) height);
-            }
-        }
     }
 
 }
