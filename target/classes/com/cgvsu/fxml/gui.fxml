@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.CheckMenuItem?>
+<AnchorPane fx:id="anchorPane" xmlns:fx="http://javafx.com/fxml" fx:controller="com.cgvsu.GuiController">
+    <MenuBar>
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.input.*?>
@@ -19,14 +27,9 @@
                     <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#deleteMesh" text="Delete model">
-                <accelerator>
-                    <KeyCodeCombination alt="UP" code="L" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                </accelerator>
-            </MenuItem>
         </Menu>
         <Menu mnemonicParsing="false" text="Camera Options">
-            <MenuItem mnemonicParsing="false" onAction="#handleMouseScroll" text="Forward">
+            <MenuItem mnemonicParsing="false" onAction="#handleCameraForward" text="Forward">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="UP" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
@@ -68,10 +71,17 @@
                     <KeyCodeCombination alt="UP" code="B" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </CheckMenuItem>
-            <CheckMenuItem mnemonicParsing="false" onAction="#loadTexture" selected="false" text="Использовать текстуру">
+            <!--<CheckMenuItem mnemonicParsing="false" onAction="#loadTexture" selected="false" text="Использовать текстуру">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
+<<<<<<< HEAD
+            </CheckMenuItem> -->
+        </Menu>
+    </MenuBar>
+
+    <Canvas fx:id="canvas" width="1600" height="870" AnchorPane.topAnchor="30.0"/>
+</AnchorPane>
             </CheckMenuItem>
         </Menu>
         <Menu mnemonicParsing="false" text="Настройки модели">

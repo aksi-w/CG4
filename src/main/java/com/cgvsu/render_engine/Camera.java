@@ -156,7 +156,6 @@ public class Camera {
     }
 
     public void handleMouseScroll(float delta) {
-        // Zoom in or out based on the mouse wheel movement
         Vector3f viewDirection = Vector3f.subtraction(target, position).normalize();
         position = Vector3f.addition(position, Vector3f.multiplication(viewDirection, delta * ZOOM_SPEED));
     }
