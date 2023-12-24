@@ -346,7 +346,7 @@ public class GuiController {
     }
 
     @FXML
-    private void handleMousegiScroll(ScrollEvent event) {
+    private void handleMouseScroll(ScrollEvent event) {
         double delta = event.getDeltaY();
         camera.get(numberCamera).handleMouseScroll((float) delta);
     }
