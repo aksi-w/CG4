@@ -265,27 +265,6 @@ public class GuiController {
         }
 
         transformModel = affineTransf.transformModel(transformModel);
-
-        renderTransformedModel();
-    }
-    private void renderTransformedModel() { /// это для отображение измененной модели (Для Дианы)
-        double width = canvas.getWidth();
-        double height = canvas.getHeight();
-
-        canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-        scene.camera.setAspectRatio((float) (width / height));
-
-        if (transformModel != null) {
-            try {
-                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera.get(numberCamera), transformModel, (int) width, (int) height, image);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            if (isStructure) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera.get(numberCamera), transformModel, (int) width, (int) height);
-            }
-        }
     }
 
 }
