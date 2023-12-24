@@ -16,11 +16,11 @@ public class Simple3DViewer extends Application {
         AnchorPane viewport = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("fxml/gui.fxml")));
 
         Scene scene = new Scene(viewport);
-        stage.setMinWidth(700);
-        stage.setMinHeight(700);
+        stage.setMinWidth(1000);
+        stage.setMinHeight(900);
         viewport.prefWidthProperty().bind(scene.widthProperty());
         viewport.prefHeightProperty().bind(scene.heightProperty());
-
+        stage.setResizable(false);
         stage.setTitle("кг таск4");
         stage.setScene(scene);
         stage.show();
