@@ -79,7 +79,7 @@ public class Matrix4f {
         return new Matrix4f(zeroMatrix);
     }
 
-    public Matrix4f unitMatrix() {
+    public static Matrix4f unitMatrix() {
         float[][] res = new float[4][4];
         for (int i = 0; i < res.length; i++) {
             for (int j = 0; j < res.length; j++) {

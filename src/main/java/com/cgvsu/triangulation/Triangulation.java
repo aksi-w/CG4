@@ -71,8 +71,8 @@ public class Triangulation {
         List<Integer> vertexIndices = polygon.getVertexIndices();
         int verticesCount = vertexIndices.size();
 
-        Vector3f vector1 = fromTwoPoints(model.vertices.get(vertexIndices.get(0)), model.vertices.get(vertexIndices.get(1)));
-        Vector3f vector2 = fromTwoPoints(model.vertices.get(vertexIndices.get(0)), model.vertices.get(vertexIndices.get(verticesCount - 1)));
+        Vector3f vector1 = fromTwoPoints(model.getVertices().get(vertexIndices.get(0)), model.getVertices().get(vertexIndices.get(1)));
+        Vector3f vector2 = fromTwoPoints(model.getVertices().get(vertexIndices.get(0)), model.getVertices().get(vertexIndices.get(verticesCount - 1)));
 
         Vector3f resultVector = new Vector3f();
         resultVector.cross(vector1, vector2);
@@ -82,7 +82,7 @@ public class Triangulation {
     protected static Vector3f calculateNormalForVertexInModel(final Model model, final int vertexIndex) {
         List<Vector3f> saved = new ArrayList<>();
 
-        for (Polygon polygon : model.polygons) {
+        for (Polygon polygon : model.getPolygons()) {
             if (polygon.getVertexIndices().contains(vertexIndex)) {
                 Vector3f polygonNormal = calculateNormalForPolygon(polygon, model);
                 if (polygonNormal.length() > 0) {
