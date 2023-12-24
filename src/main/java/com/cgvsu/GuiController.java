@@ -41,6 +41,7 @@ import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
 import com.cgvsu.render_engine.Camera;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -48,7 +49,7 @@ public class GuiController {
 
     final private float TRANSLATION = 0.5F;
     private boolean isStructure = false;
-    public static boolean isLight = false;
+    public static boolean isLight = true;
     private BufferedImage image = null;
 
     @FXML
@@ -62,7 +63,6 @@ public class GuiController {
     private ComboBox<String> chooseModel;
     @FXML
     private ComboBox<String> chooseCamera;
-
     private final List<Model> mesh = new ArrayList<>();
     private final List<String> names = new ArrayList<>();
     private final List<String> namesCamera = new ArrayList<>();
@@ -221,6 +221,23 @@ public class GuiController {
         isLight = !isLight;
     }
 
+    @FXML
+    private void loadTexture() throws IOException {
+
+        if (!mesh.get(numberMesh).isTexture) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG (*.jpg)", "*.jpg"));
+            fileChooser.setTitle("Загрузить текстуру");
+            File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());
+
+            if (file == null) {
+                return;
+            }
+            image = ImageIO.read(file);
+        }
+        mesh.get(numberMesh).isTexture = !mesh.get(numberMesh).isTexture;
+
+    }
 
     public void handleModelForward(ActionEvent actionEvent) {
         for (ModelOnScene model : scene.modelsList) {
