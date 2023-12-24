@@ -357,33 +357,6 @@ public class GuiController {
         camera.get(numberCamera).handleKeyPress(direction);
     }
 
-    public void zoom(ScrollEvent scrollEvent) {
-        double delta = scrollEvent.getDeltaY();
-        Vector3f cameraPositionInCoords = scene.getCameraPosition();
-        if (delta < 0) {
-            if (cameraPositionInCoords.getX() > cameraPositionInCoords.getY()
-                    && cameraPositionInCoords.getX() > cameraPositionInCoords.getZ()) {
-                scene.getCamera().movePosition(new Vector3f(TRANSLATION, 0, 0));
-            } else if (cameraPositionInCoords.getY() > cameraPositionInCoords.getX()
-                    && cameraPositionInCoords.getY() > cameraPositionInCoords.getZ()) {
-                scene.getCamera().movePosition(new Vector3f(0, TRANSLATION, 0));
-            } else if (cameraPositionInCoords.getZ() > cameraPositionInCoords.getX()
-                    && cameraPositionInCoords.getZ() > cameraPositionInCoords.getY()) {
-                scene.getCamera().movePosition(new Vector3f(0, 0, TRANSLATION));
-            }
-        } else {
-            if (cameraPositionInCoords.getX() > cameraPositionInCoords.getY()
-                    && cameraPositionInCoords.getX() > cameraPositionInCoords.getZ()) {
-                scene.getCamera().movePosition(new Vector3f(-TRANSLATION, 0, 0));
-            } else if (cameraPositionInCoords.getY() > cameraPositionInCoords.getX()
-                    && cameraPositionInCoords.getY() > cameraPositionInCoords.getZ()) {
-                scene.getCamera().movePosition(new Vector3f(0, -TRANSLATION, 0));
-            } else if (cameraPositionInCoords.getZ() > cameraPositionInCoords.getX()
-                    && cameraPositionInCoords.getZ() > cameraPositionInCoords.getY()) {
-                scene.getCamera().movePosition(new Vector3f(0, 0, -TRANSLATION));
-            }
-        }
-    }
     private void mousePressed(MouseEvent mouseEvent) {
         AtomicReference<Double> startX = new AtomicReference<>(mouseEvent.getX());
         AtomicReference<Double> startY = new AtomicReference<>(mouseEvent.getY());
