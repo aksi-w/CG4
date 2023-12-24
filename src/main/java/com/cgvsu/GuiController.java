@@ -82,7 +82,7 @@ public class GuiController {
             new Vector3f(0, 0, 0),
             1.0F, 1, 0.01F, 100)));
 
-    GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
+    //GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
 
 
     private int numberCamera = 0;
@@ -416,5 +416,46 @@ public class GuiController {
                             (float) dz * 0.01F)
             );
         });
+    }
+    public void handleModelLeft(ActionEvent actionEvent) {
+        /**for (ModelOnScene model : scene.modelsList) {
+            model.setTranslationX(TRANSLATION);
+            //RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(), (int) canvas.getHeight());
+            System.out.println("");
+            //camera.get(numberCamera).movePosition(new Vector3f(0, TRANSLATION, 0));
+        }*/
+        affineTransf.setTx(TRANSLATION);
+        /**if (transformModel == null) {
+            transformModel = new Model(noTransformModel);
+        }*/
+
+        transformModel = affineTransf.transformModel(transformModel);
+    }
+
+    @FXML
+    public void handleModelRight(ActionEvent actionEvent) {
+        for (ModelOnScene model : scene.modelsList) {
+            model.setTranslationX(-TRANSLATION);
+            RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
+                    (int) canvas.getHeight());
+        }
+    }
+
+    @FXML
+    public void handleModelBackward(ActionEvent actionEvent) {
+        for (ModelOnScene model : scene.modelsList) {
+            model.setTranslationY(-TRANSLATION);
+            RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
+                    (int) canvas.getHeight());
+        }
+    }
+
+    @FXML
+    public void handleModelForward(ActionEvent actionEvent) {
+        for (ModelOnScene model : scene.modelsList) {
+            model.setTranslationY(TRANSLATION);
+            RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
+                    (int) canvas.getHeight());
+        }
     }
 }
