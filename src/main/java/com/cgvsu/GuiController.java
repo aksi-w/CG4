@@ -4,6 +4,7 @@ import com.cgvsu.Scene.Scene;
 import com.cgvsu.math.Matrix.Matrix;
 import com.cgvsu.math.Vector.Vector;
 import com.cgvsu.math.Vector.Vector3f;
+import com.cgvsu.math.affinetransf.AffineTransf;
 import com.cgvsu.model.ModelOnScene;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.model.TriangulatedModelWithCorrectNormal;
@@ -57,6 +58,9 @@ public class GuiController {
     @FXML
     private Canvas canvas;
     Scene scene = new Scene();
+    private AffineTransf affineTransf = new AffineTransf();
+    private Model noTransformModel = null;
+    private Model transformModel = null;
 
     @FXML
     private ComboBox<String> chooseModel;
@@ -72,6 +76,8 @@ public class GuiController {
             new Vector3f(0, 00, 100),
             new Vector3f(0, 0, 0),
             1.0F, 1, 0.01F, 100)));
+
+    GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
 
 
     private int numberCamera = 0;
@@ -130,6 +136,7 @@ public class GuiController {
 
         Path fileName = Path.of(file.getAbsolutePath());
 
+
         try {
             String fileContent = Files.readString(fileName);
             mesh.add(ObjReader.read(fileContent));
@@ -147,21 +154,21 @@ public class GuiController {
 
         }
         /**for (int i = 0; i < model.get(model.size() - 1).polygons.size(); i++) {
-            model.get(model.size() - 1).trianglePolygons.add(new Polygon());
-            model.get(model.size() - 1).trianglePolygons.get(i).getVertexIndices().addAll(model.get(model.size() - 1).polygons.get(i).getVertexIndices());
-            model.get(model.size() - 1).trianglePolygons.get(i).getTextureVertexIndices().addAll(model.get(model.size() - 1).polygons.get(i).getTextureVertexIndices());
-            model.get(model.size() - 1).trianglePolygons.get(i).getNormalIndices().addAll(model.get(model.size() - 1).polygons.get(i).getNormalIndices());
-        }
-        ArrayList<Polygon> triangles = TriangulatedModelWithCorrectNormal.triangulatePolygons(model.get(model.size() - 1).trianglePolygons);
-        model.get(model.size() - 1).setTrianglePolygons(triangles);
+         model.get(model.size() - 1).trianglePolygons.add(new Polygon());
+         model.get(model.size() - 1).trianglePolygons.get(i).getVertexIndices().addAll(model.get(model.size() - 1).polygons.get(i).getVertexIndices());
+         model.get(model.size() - 1).trianglePolygons.get(i).getTextureVertexIndices().addAll(model.get(model.size() - 1).polygons.get(i).getTextureVertexIndices());
+         model.get(model.size() - 1).trianglePolygons.get(i).getNormalIndices().addAll(model.get(model.size() - 1).polygons.get(i).getNormalIndices());
+         }
+         ArrayList<Polygon> triangles = TriangulatedModelWithCorrectNormal.triangulatePolygons(model.get(model.size() - 1).trianglePolygons);
+         model.get(model.size() - 1).setTrianglePolygons(triangles);
 
-        /**try {
-            String fileContent = Files.readString(fileName);
-            mesh = new Model(ObjReader.read(fileContent));
-            // todo: обработка ошибок
-        } catch (IOException | IncorrectFileException exception) {
+         /**try {
+         String fileContent = Files.readString(fileName);
+         mesh = new Model(ObjReader.read(fileContent));
+         // todo: обработка ошибок
+         } catch (IOException | IncorrectFileException exception) {
 
-        }*/
+         }*/
     }
 
     public void onSaveModelMenuItemClick(ActionEvent actionEvent) {
@@ -170,7 +177,7 @@ public class GuiController {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Model (*.obj)", "*.obj"));
         fileChooser.setTitle("Сохранить файл");
         File selectedFile = fileChooser.showSaveDialog(canvas.getScene().getWindow());
-        if(selectedFile != null) {
+        if (selectedFile != null) {
             try {
                 Model model;
                 model = scene.modelsList.get(0);
@@ -221,32 +228,64 @@ public class GuiController {
         isLight = !isLight;
     }
 
+//    public void updateScale(float scaleX, float scaleY, float scaleZ) {
+//        affineTransf.setSx(scaleX);
+//        affineTransf.setSy(scaleY);
+//        affineTransf.setSz(scaleZ);
+//    }
+//
+//    public void updateRotation(float rotateX, float rotateY, float rotateZ) {
+//        affineTransf.setRx(rotateX);
+//        affineTransf.setRy(rotateY);
+//        affineTransf.setRz(rotateZ);
+//    }
+//
+//
+//    public void updateTranslation(float translateX, float translateY, float translateZ) {
+//        affineTransf.setTx(translateX);
+//        affineTransf.setTy(translateY);
+//        affineTransf.setTz(translateZ);
+//    }
 
-    public void handleModelForward(ActionEvent actionEvent) {
-        for (ModelOnScene model : scene.modelsList) {
-            model.setTranslationY(TRANSLATION);
-            RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
-                    (int) canvas.getHeight());
+    public void transform(float scaleX, float scaleY, float scaleZ,
+                          float rotateX, float rotateY, float rotateZ,
+                          float translateX, float translateY, float translateZ) { // тут сами изменнения задаются (Для Дианы)
+        affineTransf.setSx(scaleX);
+        affineTransf.setSy(scaleY);
+        affineTransf.setSz(scaleZ);
+        affineTransf.setRx(rotateX);
+        affineTransf.setRy(rotateY);
+        affineTransf.setRz(rotateZ);
+        affineTransf.setTx(translateX);
+        affineTransf.setTy(translateY);
+        affineTransf.setTz(translateZ);
+
+        if (transformModel == null) {
+            transformModel = new Model(noTransformModel);
+        }
+
+        transformModel = affineTransf.transformModel(transformModel);
+
+        renderTransformedModel();
+    }
+    private void renderTransformedModel() { /// это для отображение измененной модели (Для Дианы)
+        double width = canvas.getWidth();
+        double height = canvas.getHeight();
+
+        canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+        scene.camera.setAspectRatio((float) (width / height));
+
+        if (transformModel != null) {
+            try {
+                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera.get(numberCamera), transformModel, (int) width, (int) height, image);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (isStructure) {
+                RenderEngine.render(canvas.getGraphicsContext2D(), camera.get(numberCamera), transformModel, (int) width, (int) height);
+            }
         }
     }
 
-    public void handleModelLeft(ActionEvent actionEvent) throws Matrix.MatrixException, Vector.VectorException {
-        for (ModelOnScene model : scene.modelsList) {
-            model.setTranslationX(TRANSLATION);
-            RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
-                    (int) canvas.getHeight());
-        }
-    }
-
-    public void handleModelBackward(ActionEvent actionEvent) {
-        for (ModelOnScene model : scene.modelsList) {
-            model.setTranslationY(-TRANSLATION);
-            RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
-                    (int) canvas.getHeight());
-        }
-    }
-
-    public void handleModelRight(ActionEvent actionEvent) {
-
-    }
 }
