@@ -56,6 +56,9 @@ public class Model {
     public ArrayList<Polygon> getPolygons() {
         return new ArrayList<>(polygons);
     }
+    public void setTrianglePolygons(ArrayList<Polygon> polygons){
+        this.trianglePolygons=polygons;
+    }
 
     public void addPolygon(Polygon polygon) {
         this.polygons.add(polygon);
