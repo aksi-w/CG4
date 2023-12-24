@@ -67,6 +67,7 @@ public class GuiController {
     private ComboBox<String> chooseModel;
     @FXML
     private ComboBox<String> chooseCamera;
+    private String selectedValueCamera;
     private final List<Model> mesh = new ArrayList<>();
     private final List<String> names = new ArrayList<>();
     private final List<String> namesCamera = new ArrayList<>();
@@ -244,6 +245,39 @@ public class GuiController {
         mesh.get(numberMesh).isTexture = !mesh.get(numberMesh).isTexture;
 
     }
+
+    @FXML
+    public void addCamera() {
+        camera.add(new Camera(
+                new Vector3f(0, 0, 100),
+                new Vector3f(0, 0, 0),
+                1.0F, 1, 0.01F, 100));
+        numberCamera++;
+        namesCamera.add(String.valueOf(numberCamera));
+        chooseCamera.getItems().add(String.valueOf(numberCamera));
+    }
+
+    @FXML
+    public void deleteCamera() {
+        if (camera.size() > 1) {
+            if (numberCamera == camera.size() - 1) numberCamera--;
+            camera.remove(camera.size() - 1);
+            names.remove(camera.size() - 1);
+            chooseCamera.getItems().remove(numberCamera + 1);
+        }
+    }
+
+    @FXML
+    public void choosingCamera(ActionEvent actionEvent) {
+        selectedValueCamera = chooseCamera.getSelectionModel().getSelectedItem();
+        for (int i = 0; i < namesCamera.size(); i++) {
+            if (namesCamera.get(i).equals(selectedValueCamera)) {
+                numberCamera = i;
+            }
+        }
+
+    }
+
 //    public void updateScale(float scaleX, float scaleY, float scaleZ) {
 //        affineTransf.setSx(scaleX);
 //        affineTransf.setSy(scaleY);
