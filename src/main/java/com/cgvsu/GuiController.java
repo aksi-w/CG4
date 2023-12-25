@@ -66,7 +66,7 @@ public class GuiController {
     Scene scene = new Scene();
     private AffineTransf affineTransf = new AffineTransf();
 
-    private Model transformModel = null;
+    //private Model transformModel = null;
     private Model noTransformModel = null;
 
     @FXML
@@ -180,7 +180,7 @@ public class GuiController {
             String fileContent = Files.readString(fileName);
             originalModel = ObjReader.read(fileContent);
             mesh.add(originalModel);
-            //noTransformModel = originalModel;
+            noTransformModel = originalModel;
             names.add(file.getName());
             chooseModel.getItems().add(file.getName());
         } catch (IOException | IncorrectFileException exception) {
@@ -206,7 +206,7 @@ public class GuiController {
         File selectedFile = fileChooser.showSaveDialog(canvas.getScene().getWindow());
         if (selectedFile != null) {
             try {
-                Model model = new Model(mesh.get(0));
+                Model model = new Model();
                 //model = ;
                 ObjWriter.write(selectedFile, model);
                 JOptionPane.showMessageDialog(null, "Модель успешно сохранена");
@@ -344,12 +344,13 @@ public class GuiController {
                           float rotateX, float rotateY, float rotateZ,
                           float translateX, float translateY, float translateZ) {
         // Проверка на наличие оригинальной модели
-        if (originalModel == null) {
+        /**if (originalModel == null) {
             return;
-        }
+        }*/
 
         // Создание копии оригинальной модели перед каждым преобразованием
-        transformModel = new Model(originalModel);
+        Model transformModel = new Model();
+        transformModel=originalModel;
 
         // Применение трансформаций к модели
         affineTransf.setSx(scaleX);
@@ -363,13 +364,15 @@ public class GuiController {
         affineTransf.setTz(translateZ);
 
         transformModel = affineTransf.transformModel(transformModel);
+        noTransformModel = affineTransf.transformModel(noTransformModel);
+
+
+        renderTransformedModel(transformModel);
         System.out.println("модель изменилась");
 
-
-        //renderTransformedModel();
     }
 
-    private void renderTransformedModel() {
+    private void renderTransformedModel(Model transformModel) {
         double width = canvas.getWidth();
         double height = canvas.getHeight();
         canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
@@ -385,6 +388,19 @@ public class GuiController {
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera.get(numberCamera), transformModel, (int) width, (int) height);
             }
         }
+
+        /**canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+        scene.camera.setAspectRatio((float) (width / height));
+
+        if (mesh.size() != 0) {
+            try {
+                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera.get(numberCamera), mesh.get(numberMesh), (int) width, (int) height, image);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }*/
+        System.out.println("изменение в рендере");
     }
     private float parseTextField(TextField textField, boolean isTranslate) {
         try {
@@ -473,7 +489,7 @@ public class GuiController {
          transformModel = new Model(noTransformModel);
          }*/
 
-        transformModel = affineTransf.transformModel(transformModel);
+        //transformModel = affineTransf.transformModel(transformModel);
     }
 
     @FXML
