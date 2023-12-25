@@ -85,7 +85,7 @@ public class GuiController {
             new Vector3f(0, 0, 0),
             1.0F, 1, 0.01F, 100)));
 
-    //GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
+    GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
 
 
     private int numberCamera = 0;
@@ -394,6 +394,7 @@ public class GuiController {
             );
         });
     }
+
     public void handleModelLeft(ActionEvent actionEvent) {
         /**for (ModelOnScene model : scene.modelsList) {
             model.setTranslationX(TRANSLATION);
