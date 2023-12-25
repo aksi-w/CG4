@@ -187,14 +187,14 @@ public class GuiController {
 
         }
 
-        /**for (int i = 0; i < mesh.get(mesh.size() - 1).polygons.size(); i++) {
+        for (int i = 0; i < mesh.get(mesh.size() - 1).polygons.size(); i++) {
          mesh.get(mesh.size() - 1).trianglePolygons.add(new Polygon());
          mesh.get(mesh.size() - 1).trianglePolygons.get(i).getVertexIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getVertexIndices());
          mesh.get(mesh.size() - 1).trianglePolygons.get(i).getTextureVertexIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getTextureVertexIndices());
          mesh.get(mesh.size() - 1).trianglePolygons.get(i).getNormalIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getNormalIndices());
          }
          ArrayList<Polygon> triangles = Triangulation.triangulation(mesh.get(mesh.size() - 1).trianglePolygons);
-         mesh.get(mesh.size() - 1).setTrianglePolygons(triangles);*/
+         mesh.get(mesh.size() - 1).setTrianglePolygons(triangles);
 
     }
 

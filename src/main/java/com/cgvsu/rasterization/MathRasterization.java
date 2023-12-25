@@ -21,7 +21,8 @@ public class MathRasterization{
 
     public static double getCosLight(Camera camera, Point3D p1, Point3D p2, Point3D p3) {
         Vector3f normal = getNormal(p1, p2, p3);
-        Vector3f normalCamera = new Vector3f(camera.getTarget().getX() - camera.getPosition().getX(),
+        Vector3f normalCamera = new Vector3f(
+                camera.getTarget().getX() - camera.getPosition().getX(),
                 camera.getTarget().getY() - camera.getPosition().getY(),
                 camera.getTarget().getZ() - camera.getPosition().getZ());
         Vector3f normalCameraN = new Vector3f(
