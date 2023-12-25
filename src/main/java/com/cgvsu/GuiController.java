@@ -368,7 +368,6 @@ public class GuiController {
             double endY = mouseEvent1.getY();
             double dx = startX - endX;
             double dy = endY - startY;
-
             dx *= 0.01;
             dy *= 0.01;
 
