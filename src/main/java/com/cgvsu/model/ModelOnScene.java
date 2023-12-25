@@ -20,7 +20,7 @@ public class ModelOnScene extends Model {
     public boolean isActive;
 
     public ModelOnScene(Model model) {
-        super(model);
+        super();
         this.modelStart = model;
         this.isActive = false;
     }

@@ -6,9 +6,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="CG4" />
         <module name="cgvsu" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="CG4" target="1.5" />
+      <module name="cgvsu" target="17" />
+    </bytecodeTargetLevel>
   </component>
 </project>

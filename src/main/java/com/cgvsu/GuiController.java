@@ -22,6 +22,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -30,6 +31,7 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.FileWriter;
 import java.nio.file.Files;
@@ -63,8 +65,9 @@ public class GuiController {
     private Canvas canvas;
     Scene scene = new Scene();
     private AffineTransf affineTransf = new AffineTransf();
+
+    //private Model transformModel = null;
     private Model noTransformModel = null;
-    private Model transformModel = null;
 
     @FXML
     private ComboBox<String> chooseModel;
@@ -72,23 +75,45 @@ public class GuiController {
     private ComboBox<String> chooseCamera;
     private String selectedValue;
     private String selectedValueCamera;
-    private final List<Model> mesh = new ArrayList<>();
+    private final ArrayList<Model> mesh = new ArrayList<>();
     private final List<String> names = new ArrayList<>();
     private final List<String> namesCamera = new ArrayList<>();
-    private final List<Model> model = new ArrayList<>();
+    private Model originalModel = null;
+
+
+
 
     private List<Camera> camera = new ArrayList<>(Arrays.asList(new Camera(
             new Vector3f(0, 00, 100),
             new Vector3f(0, 0, 0),
             1.0F, 1, 0.01F, 100)));
 
-    //GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
+    GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
 
 
     private int numberCamera = 0;
     public static int numberMesh = 0;
 
     private Timeline timeline;
+    private TextField setSX;
+    @FXML
+    private TextField scaleX;
+    @FXML
+    private TextField scaleY;
+    @FXML
+    private TextField scaleZ;
+    @FXML
+    private TextField rotateX;
+    @FXML
+    private TextField rotateY;
+    @FXML
+    private TextField rotateZ;
+    @FXML
+    private TextField translateX;
+    @FXML
+    private TextField translateY;
+    @FXML
+    private TextField translateZ;
 
     @FXML
     private void initialize() {
@@ -132,6 +157,8 @@ public class GuiController {
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+
+
     }
 
 
@@ -151,36 +178,24 @@ public class GuiController {
 
         try {
             String fileContent = Files.readString(fileName);
-            mesh.add(ObjReader.read(fileContent));
-            //ModelOnScene model = new ModelOnScene((Model) mesh);
-            //scene.modelsList.add(model);
+            originalModel = ObjReader.read(fileContent);
+            mesh.add(originalModel);
+            noTransformModel = originalModel;
             names.add(file.getName());
             chooseModel.getItems().add(file.getName());
-
-            //ModelOnScene model = new ModelOnScene(mesh);
-            //scene.modelsList.add(model);
-            //model.add(ObjReader.read(fileContent));
-
-            // todo: обработка ошибок
         } catch (IOException | IncorrectFileException exception) {
 
         }
-        /**for (int i = 0; i < model.get(model.size() - 1).polygons.size(); i++) {
-         model.get(model.size() - 1).trianglePolygons.add(new Polygon());
-         model.get(model.size() - 1).trianglePolygons.get(i).getVertexIndices().addAll(model.get(model.size() - 1).polygons.get(i).getVertexIndices());
-         model.get(model.size() - 1).trianglePolygons.get(i).getTextureVertexIndices().addAll(model.get(model.size() - 1).polygons.get(i).getTextureVertexIndices());
-         model.get(model.size() - 1).trianglePolygons.get(i).getNormalIndices().addAll(model.get(model.size() - 1).polygons.get(i).getNormalIndices());
+
+        /**for (int i = 0; i < mesh.get(mesh.size() - 1).polygons.size(); i++) {
+         mesh.get(mesh.size() - 1).trianglePolygons.add(new Polygon());
+         mesh.get(mesh.size() - 1).trianglePolygons.get(i).getVertexIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getVertexIndices());
+         mesh.get(mesh.size() - 1).trianglePolygons.get(i).getTextureVertexIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getTextureVertexIndices());
+         mesh.get(mesh.size() - 1).trianglePolygons.get(i).getNormalIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getNormalIndices());
          }
-        ArrayList<Polygon> triangles = Triangulation.triangulation(model.get(model.size() - 1).trianglePolygons);
-        mesh.get(mesh.size() - 1).setTrianglePolygons(triangles);
+         ArrayList<Polygon> triangles = Triangulation.triangulation(mesh.get(mesh.size() - 1).trianglePolygons);
+         mesh.get(mesh.size() - 1).setTrianglePolygons(triangles);*/
 
-         /**try {
-         String fileContent = Files.readString(fileName);
-         mesh = new Model(ObjReader.read(fileContent));
-         // todo: обработка ошибок
-         } catch (IOException | IncorrectFileException exception) {
-
-         }*/
     }
 
     public void onSaveModelMenuItemClick(ActionEvent actionEvent) {
@@ -191,8 +206,8 @@ public class GuiController {
         File selectedFile = fileChooser.showSaveDialog(canvas.getScene().getWindow());
         if (selectedFile != null) {
             try {
-                Model model;
-                model = scene.modelsList.get(0);
+                Model model = new Model();
+                //model = ;
                 ObjWriter.write(selectedFile, model);
                 JOptionPane.showMessageDialog(null, "Модель успешно сохранена");
             } catch (Exception e) {
@@ -327,7 +342,17 @@ public class GuiController {
 
     public void transform(float scaleX, float scaleY, float scaleZ,
                           float rotateX, float rotateY, float rotateZ,
-                          float translateX, float translateY, float translateZ) { // тут сами изменнения задаются (Для Дианы)
+                          float translateX, float translateY, float translateZ) {
+        // Проверка на наличие оригинальной модели
+        /**if (originalModel == null) {
+            return;
+        }*/
+
+        // Создание копии оригинальной модели перед каждым преобразованием
+        Model transformModel = new Model();
+        transformModel=originalModel;
+
+        // Применение трансформаций к модели
         affineTransf.setSx(scaleX);
         affineTransf.setSy(scaleY);
         affineTransf.setSz(scaleZ);
@@ -338,104 +363,107 @@ public class GuiController {
         affineTransf.setTy(translateY);
         affineTransf.setTz(translateZ);
 
-        if (transformModel == null) {
-            transformModel = new Model(noTransformModel);
-        }
-
         transformModel = affineTransf.transformModel(transformModel);
+        noTransformModel = affineTransf.transformModel(noTransformModel);
+
+
+        renderTransformedModel(transformModel);
+        System.out.println("модель изменилась");
+
     }
 
+    private void renderTransformedModel(Model transformModel) {
+        double width = canvas.getWidth();
+        double height = canvas.getHeight();
+        canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+        scene.camera.setAspectRatio((float) (width / height));
+
+        if (transformModel != null) {
+            try {
+                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera.get(numberCamera), transformModel, (int) width, (int) height, image);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if (isStructure) {
+                RenderEngine.render(canvas.getGraphicsContext2D(), camera.get(numberCamera), transformModel, (int) width, (int) height);
+            }
+        }
+
+        /**canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
+        scene.camera.setAspectRatio((float) (width / height));
+
+        if (mesh.size() != 0) {
+            try {
+                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera.get(numberCamera), mesh.get(numberMesh), (int) width, (int) height, image);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+        }*/
+        System.out.println("изменение в рендере");
+    }
+    private float parseTextField(TextField textField, boolean isTranslate) {
+        try {
+            return Float.parseFloat(textField.getText());
+        } catch (NumberFormatException e) {
+            if (!isTranslate) {
+                return 1;
+            }
+            return 0;
+        }
+    }
+
+    public void onClick(ActionEvent actionEvent) {
+
+        //String text = scaleX.getText();
+        //parseTextField(scaleX, false);
+        transform(
+                parseTextField(scaleX, false), parseTextField(scaleY, false), parseTextField(scaleZ, false),
+                parseTextField(rotateX, false), parseTextField(rotateY, false), parseTextField(rotateZ, false),
+                parseTextField(translateX, true), parseTextField(translateY, true), parseTextField(translateZ, true)
+        );
+    }
     @FXML
     private void handleMouseScroll(ScrollEvent event) {
         double delta = event.getDeltaY();
         camera.get(numberCamera).handleMouseScroll((float) delta);
     }
 
-    @FXML
-    private void handleKeyPress(KeyEvent event) {
-        String direction = event.getCode().toString();
-        camera.get(numberCamera).handleKeyPress(direction);
-    }
+    private double startX;
+    private double startY;
 
-    public void zoom(ScrollEvent scrollEvent) {
-        double delta = scrollEvent.getDeltaY();
-        Vector3f cameraPositionInCoords = scene.getCameraPosition();
-        if (delta < 0) {
-            if (cameraPositionInCoords.getX() > cameraPositionInCoords.getY()
-                    && cameraPositionInCoords.getX() > cameraPositionInCoords.getZ()) {
-                scene.getCamera().movePosition(new Vector3f(TRANSLATION, 0, 0));
-            } else if (cameraPositionInCoords.getY() > cameraPositionInCoords.getX()
-                    && cameraPositionInCoords.getY() > cameraPositionInCoords.getZ()) {
-                scene.getCamera().movePosition(new Vector3f(0, TRANSLATION, 0));
-            } else if (cameraPositionInCoords.getZ() > cameraPositionInCoords.getX()
-                    && cameraPositionInCoords.getZ() > cameraPositionInCoords.getY()) {
-                scene.getCamera().movePosition(new Vector3f(0, 0, TRANSLATION));
-            }
-        } else {
-            if (cameraPositionInCoords.getX() > cameraPositionInCoords.getY()
-                    && cameraPositionInCoords.getX() > cameraPositionInCoords.getZ()) {
-                scene.getCamera().movePosition(new Vector3f(-TRANSLATION, 0, 0));
-            } else if (cameraPositionInCoords.getY() > cameraPositionInCoords.getX()
-                    && cameraPositionInCoords.getY() > cameraPositionInCoords.getZ()) {
-                scene.getCamera().movePosition(new Vector3f(0, -TRANSLATION, 0));
-            } else if (cameraPositionInCoords.getZ() > cameraPositionInCoords.getX()
-                    && cameraPositionInCoords.getZ() > cameraPositionInCoords.getY()) {
-                scene.getCamera().movePosition(new Vector3f(0, 0, -TRANSLATION));
-            }
-        }
-    }
+    @FXML
     private void mousePressed(MouseEvent mouseEvent) {
-        AtomicReference<Double> startX = new AtomicReference<>(mouseEvent.getX());
-        AtomicReference<Double> startY = new AtomicReference<>(mouseEvent.getY());
+        startX = mouseEvent.getX();
+        startY = mouseEvent.getY();
 
         canvas.setOnMouseDragged(mouseEvent1 -> {
             double endX = mouseEvent1.getX();
             double endY = mouseEvent1.getY();
-            double dx = startX.get() - endX;
-            double dy = endY - startY.get();
-            double dz = dx;
+            double dx = startX - endX;
+            double dy = endY - startY;
 
-            if (scene.getCamera().getPosition().getZ() < 0) {
-                dx *= -1;
-            }
+            dx *= 0.05;
+            dy *= 0.05;
 
-            if (scene.getCamera().getPosition().getX() > 0) {
-                dz *= -1;
-            }
-
-            if (Math.abs(dy) > Math.abs(dx)) {
-                dz *= 0;
-            }
-
-            startX.set(endX);
-            startY.set(endY);
-
-            scene.getCamera().movePosition(
-                    new Vector3f((float) dx * 0.01F,
-                            (float) dy * 0.01F,
-                            (float) dz * 0.01F)
-            );
+            camera.get(numberCamera).movePosition(new Vector3f((float) dx, (float) dy, 0));
+            startX = endX;
+            startY = endY;
         });
     }
-    public void handleModelLeft(ActionEvent actionEvent) {
-        /**for (ModelOnScene model : scene.modelsList) {
-            model.setTranslationX(TRANSLATION);
-            //RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(), (int) canvas.getHeight());
-            System.out.println("");
-            //camera.get(numberCamera).movePosition(new Vector3f(0, TRANSLATION, 0));
-        }*/
-        affineTransf.setTx(TRANSLATION);
-        /**if (transformModel == null) {
-            transformModel = new Model(noTransformModel);
-        }*/
 
-        transformModel = affineTransf.transformModel(transformModel);
-    }
+
+//    @FXML
+//    private void handleKeyPress(KeyEvent event) {
+//        String direction = event.getCode().toString();
+//        camera.get(numberCamera).handleKeyPress(direction);
+//    }
+
 
     @FXML
     public void handleModelRight(ActionEvent actionEvent) {
         for (ModelOnScene model : scene.modelsList) {
-            model.setTranslationX(-TRANSLATION);
+            model.setTranslationX(TRANSLATION);
             RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
                     (int) canvas.getHeight());
         }
@@ -449,6 +477,20 @@ public class GuiController {
                     (int) canvas.getHeight());
         }
     }
+    public void handleModelLeft(ActionEvent actionEvent) {
+        /**for (ModelOnScene model : scene.modelsList) {
+         model.setTranslationX(TRANSLATION);
+         //RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(), (int) canvas.getHeight());
+         System.out.println("");
+         //camera.get(numberCamera).movePosition(new Vector3f(0, TRANSLATION, 0));
+         }*/
+        affineTransf.setTx(-TRANSLATION);
+        /**if (transformModel == null) {
+         transformModel = new Model(noTransformModel);
+         }*/
+
+        //transformModel = affineTransf.transformModel(transformModel);
+    }
 
     @FXML
     public void handleModelForward(ActionEvent actionEvent) {
@@ -458,4 +500,6 @@ public class GuiController {
                     (int) canvas.getHeight());
         }
     }
+
+
 }

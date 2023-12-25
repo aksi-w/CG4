@@ -151,22 +151,24 @@ public class AffineTransf {
     }
 
     public Model transformModel(Model m) {
-        ArrayList<Polygon> p = new ArrayList<>(m.polygons);
-        ArrayList<Vector2f> tV = new ArrayList<>(m.textureVertices);
+        Model rez = new Model();
+        m = new Model();
+        rez.polygons = new ArrayList<>(m.polygons);
+        rez.textureVertices = new ArrayList<>(m.textureVertices);
         //Полигоны и текстурные вершины не изменяются
 
-        ArrayList<Vector3f> vertices = new ArrayList<>();
+        rez.vertices = new ArrayList<>();
         for (Vector3f v : m.vertices) {
-            vertices.add(transformVertex(v));
+            rez.vertices.add(transformVertex(v));
         }
 
-        ArrayList<Vector3f> normals = new ArrayList<>();
+        //ArrayList<Vector3f> normals = new ArrayList<>();
         for (Vector3f v : m.normals) {
-            normals.add(VectorMath.mullMatrix4x4OnVector3D(R, v));
+            rez.normals.add(VectorMath.mullMatrix4x4OnVector3D(R, v));
             //На преобразование нормалей влияет только матрица поворота
         }
 
-        return new Model(vertices, tV, normals, p);
+        return rez;
     }
 
 

@@ -23,11 +23,11 @@ public class Model {
         this.polygons = polygons;
     }
 
-    public Model(Model model) {
-        this.vertices = model.vertices;
-        this.textureVertices = model.textureVertices;
-        this.normals = model.normals;
-        this.polygons = model.polygons;
+    public Model() {
+        this.vertices = vertices;
+        this.textureVertices = textureVertices;
+        this.normals = normals;
+        this.polygons = polygons;
     }
 
     public List<Vector3f> getVertices() {
