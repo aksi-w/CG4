@@ -159,19 +159,19 @@ public class Camera {
         Vector3f viewDirection = Vector3f.subtraction(target, position).normalize();
         position = Vector3f.addition(position, Vector3f.multiplication(viewDirection, delta * ZOOM_SPEED));
     }
-
-    public void handleKeyPress(String direction) {
-        Vector3f right = Vector3f.cross(target, new Vector3f(0, 1, 0)).normalize();
-        Vector3f up = new Vector3f(0, 1, 0);
-
-
-        switch (direction) {
-            case "LEFT" -> position = Vector3f.addition(position, Vector3f.multiplication(right, MOVE_SPEED));
-            case "RIGHT" -> position = Vector3f.subtraction(position, Vector3f.multiplication(right, MOVE_SPEED));
-            case "UP" -> position = Vector3f.addition(position, Vector3f.multiplication(up, MOVE_SPEED));
-            case "DOWN" -> position = Vector3f.subtraction(position, Vector3f.multiplication(up, MOVE_SPEED));
-        }
-    }
+//
+//    public void handleKeyPress(String direction) {
+//        Vector3f right = Vector3f.cross(target, new Vector3f(0, 1, 0)).normalize();
+//        Vector3f up = new Vector3f(0, 1, 0);
+//
+//
+//        switch (direction) {
+//            case "LEFT" -> position = Vector3f.addition(position, Vector3f.multiplication(right, MOVE_SPEED));
+//            case "RIGHT" -> position = Vector3f.subtraction(position, Vector3f.multiplication(right, MOVE_SPEED));
+//            case "UP" -> position = Vector3f.addition(position, Vector3f.multiplication(up, MOVE_SPEED));
+//            case "DOWN" -> position = Vector3f.subtraction(position, Vector3f.multiplication(up, MOVE_SPEED));
+//        }
+//    }
 
     private Vector3f position;
     private Vector3f target;

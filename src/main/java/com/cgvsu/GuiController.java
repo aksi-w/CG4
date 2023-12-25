@@ -355,60 +355,36 @@ public class GuiController {
         camera.get(numberCamera).handleMouseScroll((float) delta);
     }
 
-    @FXML
-    private void handleKeyPress(KeyEvent event) {
-        String direction = event.getCode().toString();
-        camera.get(numberCamera).handleKeyPress(direction);
-    }
+    private double startX;
+    private double startY;
 
+    @FXML
     private void mousePressed(MouseEvent mouseEvent) {
-        AtomicReference<Double> startX = new AtomicReference<>(mouseEvent.getX());
-        AtomicReference<Double> startY = new AtomicReference<>(mouseEvent.getY());
+        startX = mouseEvent.getX();
+        startY = mouseEvent.getY();
 
         canvas.setOnMouseDragged(mouseEvent1 -> {
             double endX = mouseEvent1.getX();
             double endY = mouseEvent1.getY();
-            double dx = startX.get() - endX;
-            double dy = endY - startY.get();
-            double dz = dx;
+            double dx = startX - endX;
+            double dy = endY - startY;
 
-            if (scene.getCamera().getPosition().getZ() < 0) {
-                dx *= -1;
-            }
+            dx *= 0.01;
+            dy *= 0.01;
 
-            if (scene.getCamera().getPosition().getX() > 0) {
-                dz *= -1;
-            }
-
-            if (Math.abs(dy) > Math.abs(dx)) {
-                dz *= 0;
-            }
-
-            startX.set(endX);
-            startY.set(endY);
-
-            scene.getCamera().movePosition(
-                    new Vector3f((float) dx * 0.01F,
-                            (float) dy * 0.01F,
-                            (float) dz * 0.01F)
-            );
+            camera.get(numberCamera).movePosition(new Vector3f((float) dx, (float) dy, 0));
+            startX = endX;
+            startY = endY;
         });
     }
 
-    public void handleModelLeft(ActionEvent actionEvent) {
-        /**for (ModelOnScene model : scene.modelsList) {
-            model.setTranslationX(TRANSLATION);
-            //RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(), (int) canvas.getHeight());
-            System.out.println("");
-            //camera.get(numberCamera).movePosition(new Vector3f(0, TRANSLATION, 0));
-        }*/
-        affineTransf.setTx(-TRANSLATION);
-        /**if (transformModel == null) {
-            transformModel = new Model(noTransformModel);
-        }*/
 
-        transformModel = affineTransf.transformModel(transformModel);
-    }
+//    @FXML
+//    private void handleKeyPress(KeyEvent event) {
+//        String direction = event.getCode().toString();
+//        camera.get(numberCamera).handleKeyPress(direction);
+//    }
+
 
     @FXML
     public void handleModelRight(ActionEvent actionEvent) {
@@ -426,6 +402,20 @@ public class GuiController {
             RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
                     (int) canvas.getHeight());
         }
+    }
+    public void handleModelLeft(ActionEvent actionEvent) {
+        /**for (ModelOnScene model : scene.modelsList) {
+         model.setTranslationX(TRANSLATION);
+         //RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(), (int) canvas.getHeight());
+         System.out.println("");
+         //camera.get(numberCamera).movePosition(new Vector3f(0, TRANSLATION, 0));
+         }*/
+        affineTransf.setTx(-TRANSLATION);
+        /**if (transformModel == null) {
+         transformModel = new Model(noTransformModel);
+         }*/
+
+        transformModel = affineTransf.transformModel(transformModel);
     }
 
     @FXML
