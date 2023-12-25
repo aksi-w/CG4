@@ -22,6 +22,7 @@ import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
@@ -75,7 +76,9 @@ public class GuiController {
     private final List<Model> mesh = new ArrayList<>();
     private final List<String> names = new ArrayList<>();
     private final List<String> namesCamera = new ArrayList<>();
-    private final List<Model> model = new ArrayList<>();
+
+    private TextField scaleX;
+
 
     private List<Camera> camera = new ArrayList<>(Arrays.asList(new Camera(
             new Vector3f(0, 00, 100),
@@ -191,8 +194,8 @@ public class GuiController {
         File selectedFile = fileChooser.showSaveDialog(canvas.getScene().getWindow());
         if (selectedFile != null) {
             try {
-                Model model;
-                model = scene.modelsList.get(0);
+                Model model = new Model(mesh.get(0));
+                //model = ;
                 ObjWriter.write(selectedFile, model);
                 JOptionPane.showMessageDialog(null, "Модель успешно сохранена");
             } catch (Exception e) {
@@ -328,6 +331,7 @@ public class GuiController {
     public void transform(float scaleX, float scaleY, float scaleZ,
                           float rotateX, float rotateY, float rotateZ,
                           float translateX, float translateY, float translateZ) { // тут сами изменнения задаются (Для Дианы)
+        //String text = scaleX.getText();
         affineTransf.setSx(scaleX);
         affineTransf.setSy(scaleY);
         affineTransf.setSz(scaleZ);
@@ -397,7 +401,7 @@ public class GuiController {
             System.out.println("");
             //camera.get(numberCamera).movePosition(new Vector3f(0, TRANSLATION, 0));
         }*/
-        affineTransf.setTx(TRANSLATION);
+        affineTransf.setTx(-TRANSLATION);
         /**if (transformModel == null) {
             transformModel = new Model(noTransformModel);
         }*/
@@ -408,7 +412,7 @@ public class GuiController {
     @FXML
     public void handleModelRight(ActionEvent actionEvent) {
         for (ModelOnScene model : scene.modelsList) {
-            model.setTranslationX(-TRANSLATION);
+            model.setTranslationX(TRANSLATION);
             RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
                     (int) canvas.getHeight());
         }
@@ -430,5 +434,10 @@ public class GuiController {
             RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(),
                     (int) canvas.getHeight());
         }
+    }
+
+    public void onClick(ActionEvent actionEvent) {
+
+        String text = scaleX.getText();
     }
 }
