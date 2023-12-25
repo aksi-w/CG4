@@ -148,6 +148,10 @@
     <TextField layoutX="630.0" layoutY="610.0" prefHeight="26.0" prefWidth="79.0" fx:id="translateX"/>
     <TextField layoutX="800.0" layoutY="610.0" prefHeight="26.0" prefWidth="79.0" fx:id="translateZ"/>
 
+<<<<<<< HEAD
     <Button fx:id="affButton" layoutX="720.0" layoutY="640.0" text="Click Me" onAction="#onClick"/>
+=======
+    <Button fx:id="" layoutX="720.0" layoutY="640.0" text="Click Me" onAction="#onClick"/>
+>>>>>>> second
 
 </AnchorPane>
