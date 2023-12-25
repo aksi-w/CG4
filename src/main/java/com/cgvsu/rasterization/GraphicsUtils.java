@@ -7,5 +7,5 @@ public abstract class GraphicsUtils<T> {
         this.graphics = graphics;
     }
 
-    public abstract void setPixel(int x, int y, Colorr color);
+    public abstract void setPixel(int x, int y, Color color);
 }

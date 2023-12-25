@@ -55,7 +55,7 @@ public class GuiController {
 
     final private float TRANSLATION = 0.5F;
     private boolean isStructure = false;
-    public static boolean isLight = true;
+    public static boolean isLight = false;
     private BufferedImage image = null;
 
     @FXML
@@ -259,6 +259,7 @@ public class GuiController {
 
         if (!mesh.get(numberMesh).isTexture) {
             FileChooser fileChooser = new FileChooser();
+            //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG (*.png)", "*.png"));
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG (*.jpg)", "*.jpg"));
             fileChooser.setTitle("Загрузить текстуру");
             File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());

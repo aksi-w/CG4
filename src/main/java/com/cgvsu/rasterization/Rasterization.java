@@ -15,7 +15,7 @@ public class Rasterization {
     public static void fillTriangle(
             final GraphicsUtils gr,
             Point3D p1, Point3D p2, Point3D p3,
-            Colorr color1, Colorr color2, Colorr color3,
+            Color color1, Color color2, Color color3,
             Double[][] zBuffer, Camera camera, BufferedImage image,
             Vector2f texturePoint1, Vector2f texturePoint2, Vector2f texturePoint3, Model mesh) throws IOException {
 
@@ -78,7 +78,7 @@ public class Rasterization {
             double x1, double y1, double z1,
             double x2, double y2, double z2,
             double x3, double y3, double z3,
-            Colorr color1, Colorr color2, Colorr color3,
+            Color color1, Color color2, Color color3,
             Double[][] zBuffer, Camera camera, BufferedImage image,
             Vector2f texturePoint1, Vector2f texturePoint2, Vector2f texturePoint3, Model mesh) throws IOException {
         fillTriangle(gr, new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), new Point3D(x3, y3, z3),
@@ -91,7 +91,7 @@ public class Rasterization {
 
     private static void fillLine(
             final GraphicsUtils gr, int y, double startX, double endX,
-            Colorr color1, Colorr color2, Colorr color3,
+            Color color1, Color color2, Color color3,
             double x1, double x2, double x3,
             double y1, double y2, double y3,
             double z1, double z2, double z3,
@@ -108,9 +108,9 @@ public class Rasterization {
             double z = MathRasterization.getZ(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), new Point3D(x3, y3, z3), x, y);
             if (x >= 0 && y >= 0) {
                 if (zBuffer[x][y] == null || zBuffer[x][y] > Math.abs(z - camera.getPosition().getZ())) {
-                    Colorr color = getColor(color1, color2, color3, x, y, x1, x2, x3, y1, y2, y3, image,
+                    Color color = getColor(color1, color2, color3, x, y, x1, x2, x3, y1, y2, y3, image,
                             texturePoint1, texturePoint2, texturePoint3,mesh);
-                    gr.setPixel(x, y, new Colorr(color.getRed() * cosLight, color.getGreen() * cosLight, color.getBlue() * cosLight));
+                    gr.setPixel(x, y, new Color(color.getRed() * cosLight, color.getGreen() * cosLight, color.getBlue() * cosLight));
                     zBuffer[x][y] = Math.abs(z - camera.getPosition().getZ());
                 }
             }
@@ -118,8 +118,8 @@ public class Rasterization {
     }
 
 
-    private static Colorr getColor(
-            Colorr color1, Colorr color2, Colorr color3,
+    private static Color getColor(
+            Color color1, Color color2, Color color3,
             double x, double y,
             double x1, double x2, double x3,
             double y1, double y2, double y3,
@@ -137,7 +137,7 @@ public class Rasterization {
             double g = (alpha * color1.getGreen() + betta * color2.getGreen() + gamma * color3.getGreen());
             double b = (alpha * color1.getBlue() + betta * color2.getBlue() + gamma * color3.getBlue());
 
-            return new Colorr(r, g, b);
+            return new Color(r, g, b);
 
         } else {
             float aup = (float) (x1 - x);
@@ -161,7 +161,7 @@ public class Rasterization {
         }
     }
 
-    public static Colorr getColorTexture(double x0, double y0, BufferedImage image) throws IOException {
+    public static Color getColorTexture(double x0, double y0, BufferedImage image) throws IOException {
 
 
         int width = image.getWidth() - 1;
@@ -174,7 +174,7 @@ public class Rasterization {
         double red = ((clr & 0x00ff0000) >> 16) / 255.0f;
         double green = ((clr & 0x0000ff00) >> 8) / 255.0f;
         double blue = (clr & 0x000000ff) / 255.0f;
-        return new Colorr(red, green, blue);
+        return new Color(red, green, blue);
     }
 
 }
