@@ -382,6 +382,8 @@ public class GuiController {
     
     public void onClick(ActionEvent actionEvent) {
 
+
+
         //String text = scaleX.getText();
         //parseTextField(scaleX, false);
         transform(
