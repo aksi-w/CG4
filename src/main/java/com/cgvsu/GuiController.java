@@ -21,6 +21,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
@@ -64,8 +65,9 @@ public class GuiController {
     private Canvas canvas;
     Scene scene = new Scene();
     private AffineTransf affineTransf = new AffineTransf();
-    private Model noTransformModel = null;
+
     private Model transformModel = null;
+    private Model noTransformModel = null;
 
     @FXML
     private ComboBox<String> chooseModel;
@@ -73,11 +75,11 @@ public class GuiController {
     private ComboBox<String> chooseCamera;
     private String selectedValue;
     private String selectedValueCamera;
-    private final List<Model> mesh = new ArrayList<>();
+    private final ArrayList<Model> mesh = new ArrayList<>();
     private final List<String> names = new ArrayList<>();
     private final List<String> namesCamera = new ArrayList<>();
 
-    private TextField scaleX;
+    
 
 
     private List<Camera> camera = new ArrayList<>(Arrays.asList(new Camera(
@@ -92,6 +94,27 @@ public class GuiController {
     public static int numberMesh = 0;
 
     private Timeline timeline;
+    private TextField setSX;
+    @FXML
+    private TextField scaleX;
+    @FXML
+    private TextField scaleY;
+    @FXML
+    private TextField scaleZ;
+    @FXML
+    private TextField rotateX;
+    @FXML
+    private TextField rotateY;
+    @FXML
+    private TextField rotateZ;
+    @FXML
+    private TextField translateX;
+    @FXML
+    private TextField translateY;
+    @FXML
+    private TextField translateZ;
+    @FXML
+    private Button affButton;
 
     @FXML
     private void initialize() {
@@ -135,6 +158,14 @@ public class GuiController {
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
+
+        affButton.setOnAction(e -> {
+            transform(
+                    parseTextField(scaleX, false), parseTextField(scaleY, false), parseTextField(scaleZ, false),
+                    parseTextField(rotateX, false), parseTextField(rotateY, false), parseTextField(rotateZ, false),
+                    parseTextField(translateX, true), parseTextField(translateY, true), parseTextField(translateZ, true)
+            );
+        });
     }
 
 
@@ -155,6 +186,7 @@ public class GuiController {
         try {
             String fileContent = Files.readString(fileName);
             mesh.add(ObjReader.read(fileContent));
+            noTransformModel = ObjReader.read(fileContent);
             //ModelOnScene model = new ModelOnScene((Model) mesh);
             //scene.modelsList.add(model);
             names.add(file.getName());
@@ -168,22 +200,15 @@ public class GuiController {
         } catch (IOException | IncorrectFileException exception) {
 
         }
-        /**for (int i = 0; i < model.get(model.size() - 1).polygons.size(); i++) {
-         model.get(model.size() - 1).trianglePolygons.add(new Polygon());
-         model.get(model.size() - 1).trianglePolygons.get(i).getVertexIndices().addAll(model.get(model.size() - 1).polygons.get(i).getVertexIndices());
-         model.get(model.size() - 1).trianglePolygons.get(i).getTextureVertexIndices().addAll(model.get(model.size() - 1).polygons.get(i).getTextureVertexIndices());
-         model.get(model.size() - 1).trianglePolygons.get(i).getNormalIndices().addAll(model.get(model.size() - 1).polygons.get(i).getNormalIndices());
+        /**for (int i = 0; i < mesh.get(mesh.size() - 1).polygons.size(); i++) {
+         mesh.get(mesh.size() - 1).trianglePolygons.add(new Polygon());
+         mesh.get(mesh.size() - 1).trianglePolygons.get(i).getVertexIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getVertexIndices());
+         mesh.get(mesh.size() - 1).trianglePolygons.get(i).getTextureVertexIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getTextureVertexIndices());
+         mesh.get(mesh.size() - 1).trianglePolygons.get(i).getNormalIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getNormalIndices());
          }
-        ArrayList<Polygon> triangles = Triangulation.triangulation(model.get(model.size() - 1).trianglePolygons);
-        mesh.get(mesh.size() - 1).setTrianglePolygons(triangles);
+        ArrayList<Polygon> triangles = Triangulation.triangulation(mesh.get(mesh.size() - 1).trianglePolygons);
+        mesh.get(mesh.size() - 1).setTrianglePolygons(triangles);*/
 
-         /**try {
-         String fileContent = Files.readString(fileName);
-         mesh = new Model(ObjReader.read(fileContent));
-         // todo: обработка ошибок
-         } catch (IOException | IncorrectFileException exception) {
-
-         }*/
     }
 
     public void onSaveModelMenuItemClick(ActionEvent actionEvent) {
@@ -342,11 +367,38 @@ public class GuiController {
         affineTransf.setTy(translateY);
         affineTransf.setTz(translateZ);
 
+        // Применение трансформаций к модели
+        transformModel = affineTransf.transformModel(transformModel);
+        noTransformModel = affineTransf.transformModel(noTransformModel);
+    }
+
+        /**
         if (transformModel == null) {
             transformModel = new Model(noTransformModel);
         }
 
         transformModel = affineTransf.transformModel(transformModel);
+    }*/
+    
+    public void onClick(ActionEvent actionEvent) {
+
+        //String text = scaleX.getText();
+        //parseTextField(scaleX, false);
+        transform(
+                parseTextField(scaleX, false), parseTextField(scaleY, false), parseTextField(scaleZ, false),
+                parseTextField(rotateX, false), parseTextField(rotateY, false), parseTextField(rotateZ, false),
+                parseTextField(translateX, true), parseTextField(translateY, true), parseTextField(translateZ, true)
+        );
+    }
+    private float parseTextField(TextField textField, boolean isTranslate) {
+        try {
+            return Float.parseFloat(textField.getText());
+        } catch (NumberFormatException e) {
+            if (!isTranslate) {
+                return 1;
+            }
+            return 0;
+        }
     }
 
     @FXML
@@ -369,8 +421,8 @@ public class GuiController {
             double dx = startX - endX;
             double dy = endY - startY;
 
-            dx *= 0.01;
-            dy *= 0.01;
+            dx *= 0.05;
+            dy *= 0.05;
 
             camera.get(numberCamera).movePosition(new Vector3f((float) dx, (float) dy, 0));
             startX = endX;
@@ -427,8 +479,5 @@ public class GuiController {
         }
     }
 
-    public void onClick(ActionEvent actionEvent) {
-
-        String text = scaleX.getText();
-    }
+    
 }
