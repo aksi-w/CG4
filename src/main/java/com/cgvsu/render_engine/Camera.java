@@ -4,6 +4,9 @@ import com.cgvsu.math.Matrix.Matrix3f;
 import com.cgvsu.math.Matrix.Matrix4f;
 import com.cgvsu.math.Vector.Vector3f;
 
+import static com.cgvsu.math.Matrix.Matrix4f.rotate;
+import static com.cgvsu.render_engine.GraphicConveyor.multiplyMatrix4ByVector3;
+
 
 public class Camera {
     private static final float MOVE_SPEED = 0.5f;
@@ -157,8 +160,11 @@ public class Camera {
 
     public void handleMouseScroll(float delta) {
         Vector3f viewDirection = Vector3f.subtraction(target, position).normalize();
-        position = Vector3f.addition(position, Vector3f.multiplication(viewDirection, delta * ZOOM_SPEED));
+        Vector3f newPosition = Vector3f.addition(position, Vector3f.multiplication(viewDirection, delta * ZOOM_SPEED));
+
+        position = newPosition;
     }
+
 //
 //    public void handleKeyPress(String direction) {
 //        Vector3f right = Vector3f.cross(target, new Vector3f(0, 1, 0)).normalize();
@@ -180,6 +186,46 @@ public class Camera {
     private float nearPlane;
     private float farPlane;
 
+    private double mousePosX;
+    private double mousePosY;
+    public double mouseDeltaY;
+
+
+    public void handleMouseInput(double x, double y, boolean isPrimaryButtonDown, boolean isSecondaryButtonDown) {
+
+        if (isPrimaryButtonDown) {
+// Вращение камеры вокруг объекта при зажатой левой кнопке мыши
+            rotateCamera((float) (x - mousePosX), (float) (y - mousePosY));
+        } else if (isSecondaryButtonDown) {
+// Передвижение камеры влево/вправо при зажатой правой кнопке мыши
+            movePosition(new Vector3f((float) (x - mousePosX) * 0.1f, (float) (+y - mousePosY) * 0.1f, 0));
+        } else {
+// Передвижение камеры в зависимости от движения колесика мыши
+            if (mouseDeltaY > 0) {
+                position.subtractThis((position.subtract(target).divide(75)));
+            } else if (mouseDeltaY < 0) {
+                position.addThis((position.subtract(target).divide(75)));
+            }
+            mouseDeltaY = 0;
+        }
+
+
+        mousePosX = x;
+        mousePosY = y;
+    }
+
+
+    private void rotateCamera(float dx, float dy) {
+        float rotationX = -dy * 0.2f;
+        float rotationY = -dx * 0.2f;
+
+        Matrix4f rotationMatrixX = rotate(rotationX, 1, 0, 0);
+        Matrix4f rotationMatrixY = rotate(rotationY, 0, 1, 0);
+
+        Matrix4f rotationMatrix = Matrix4f.multiplication(rotationMatrixX, rotationMatrixY);
+
+        position = multiplyMatrix4ByVector3(rotationMatrix, position);
+    }
 
 
 }

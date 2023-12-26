@@ -219,22 +219,36 @@ public class GuiController {
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-        camera.get(numberCamera).movePosition(new Vector3f(0, 0, -TRANSLATION));
+        Vector3f direction = Vector3f.subtraction(camera.get(numberCamera).getTarget(), camera.get(numberCamera).getPosition());
+        direction.normalize();
+        Vector3f.multiplication(direction, -TRANSLATION);
+        camera.get(numberCamera).movePosition(direction);
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
-        camera.get(numberCamera).movePosition(new Vector3f(0, 0, TRANSLATION));
+        Vector3f direction = Vector3f.subtraction(camera.get(numberCamera).getTarget(), camera.get(numberCamera).getPosition());
+        direction.normalize();
+        direction = Vector3f.multiplication(direction, TRANSLATION);
+        camera.get(numberCamera).movePosition(direction);
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        camera.get(numberCamera).movePosition(new Vector3f(TRANSLATION, 0, 0));
+        Vector3f right = new Vector3f(camera.get(numberCamera).vectorX().getX(), camera.get(numberCamera).vectorX().getY(), camera.get(numberCamera).vectorX().getZ());
+
+        right.normalize();
+        right = Vector3f.multiplication(right, -TRANSLATION);
+        camera.get(numberCamera).movePosition(right);
     }
+
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        camera.get(numberCamera).movePosition(new Vector3f(-TRANSLATION, 0, 0));
+        Vector3f right = new Vector3f(camera.get(numberCamera).vectorX().getX(), camera.get(numberCamera).vectorX().getY(), camera.get(numberCamera).vectorX().getZ());
+        right.normalize();
+        right = Vector3f.multiplication(right, TRANSLATION);
+        camera.get(numberCamera).movePosition(right);
     }
 
     @FXML
@@ -345,12 +359,12 @@ public class GuiController {
                           float translateX, float translateY, float translateZ) {
         // Проверка на наличие оригинальной модели
         /**if (originalModel == null) {
-            return;
-        }*/
+         return;
+         }*/
 
         // Создание копии оригинальной модели перед каждым преобразованием
         Model transformModel = new Model();
-        transformModel=originalModel;
+        transformModel = originalModel;
 
         // Применение трансформаций к модели
         affineTransf.setSx(scaleX);
@@ -363,14 +377,27 @@ public class GuiController {
         affineTransf.setTy(translateY);
         affineTransf.setTz(translateZ);
 
+        // Вывод значений аффинных трансформаций в консоль
+        System.out.println("Трансформации:");
+        System.out.println("Scale X: " + scaleX);
+        System.out.println("Scale Y: " + scaleY);
+        System.out.println("Scale Z: " + scaleZ);
+        System.out.println("Rotate X: " + rotateX);
+        System.out.println("Rotate Y: " + rotateY);
+        System.out.println("Rotate Z: " + rotateZ);
+        System.out.println("Translate X: " + translateX);
+        System.out.println("Translate Y: " + translateY);
+        System.out.println("Translate Z: " + translateZ);
+
+        // Преобразование модели
         transformModel = affineTransf.transformModel(transformModel);
         noTransformModel = affineTransf.transformModel(noTransformModel);
 
-
+        // Рендеринг трансформированной модели
         renderTransformedModel(transformModel);
         System.out.println("модель изменилась");
-
     }
+
 
     private void renderTransformedModel(Model transformModel) {
         double width = canvas.getWidth();

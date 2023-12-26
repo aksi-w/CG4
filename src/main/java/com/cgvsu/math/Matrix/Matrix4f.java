@@ -96,12 +96,28 @@ public class Matrix4f {
     public static Vector4f multiplyOnVector(Matrix4f matrix, Vector4f vector) {
         float[] res = new float[4];
         for (int i = 0; i < res.length; i++) {
-            res[i] = matrix.matrix[i][0] * vector.getX() +
-                    matrix.matrix[i][1] * vector.getY() +
-                    matrix.matrix[i][2] * vector.getZ() +
-                    matrix.matrix[i][3] * vector.getW();
+            res[i] = matrix.matrix[0][i] * vector.getX() +
+                    matrix.matrix[1][i] * vector.getY() +
+                    matrix.matrix[2][i] * vector.getZ() +
+                    matrix.matrix[3][i] * vector.getW();
         }
         return new Vector4f(res[0], res[1], res[2], res[3]);
+    }
+
+    public static Matrix4f rotate(float angle, float axisX, float axisY, float axisZ) {
+        float radians = (float) Math.toRadians(angle);
+        float sin = (float) Math.sin(radians);
+        float cos = (float) Math.cos(radians);
+        float oneMinusCos = 1.0f - cos;
+
+        float[][] rotationMatrix = {
+                {cos + axisX * axisX * oneMinusCos, axisX * axisY * oneMinusCos - axisZ * sin, axisX * axisZ * oneMinusCos + axisY * sin, 0},
+                {axisY * axisX * oneMinusCos + axisZ * sin, cos + axisY * axisY * oneMinusCos, axisY * axisZ * oneMinusCos - axisX * sin, 0},
+                {axisZ * axisX * oneMinusCos - axisY * sin, axisZ * axisY * oneMinusCos + axisX * sin, cos + axisZ * axisZ * oneMinusCos, 0},
+                {0, 0, 0, 1}
+        };
+
+        return new Matrix4f(rotationMatrix);
     }
 
 }

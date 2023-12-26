@@ -154,4 +154,27 @@ public class Vector3f extends Vector implements IVector {
     public static boolean isEqual(float x, float y){
         return Math.abs(x-y) < eps;
     }
+
+    public final void subtractThis(Vector3f other1) {
+        this.x -= other1.x;
+        this.y -= other1.y;
+        this.z -= other1.z;
+    }
+    public final void addThis(Vector3f other1) {
+        this.x += other1.x;
+        this.y += other1.y;
+        this.z += other1.z;
+    }
+    public final void add(Vector3f other1, Vector3f other2) {
+        this.x = other1.x + other2.x;
+        this.y = other1.y + other2.y;
+        this.z = other1.z + other2.z;
+    }
+
+    // Вычитание векторов
+    public final void subtract(Vector3f other1, Vector3f other2) {
+        this.x = other1.x - other2.x;
+        this.y = other1.y - other2.y;
+        this.z = other1.z - other2.z;
+    }
 }
