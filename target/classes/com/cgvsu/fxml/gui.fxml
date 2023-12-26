@@ -63,18 +63,18 @@
                     <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </CheckMenuItem>
-            <!-- <CheckMenuItem mnemonicParsing="false" onAction="#loadLight" selected="false" text="Использовать освещение">
+            <CheckMenuItem mnemonicParsing="false" onAction="#loadLight" selected="false" text="Использовать освещение">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="B" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
-            </CheckMenuItem> -->
+            </CheckMenuItem>
             <CheckMenuItem mnemonicParsing="false" onAction="#loadTexture" selected="false" text="Использовать текстуру">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </CheckMenuItem>
         </Menu>
-        <Menu mnemonicParsing="false" text="Model Options">
+        <!-- <Menu mnemonicParsing="false" text="Model Options">
             <items>
                 <MenuItem mnemonicParsing="false" onAction="#handleModelForward" text="Вверх">
                     <accelerator>
@@ -97,7 +97,7 @@
                     </accelerator>
                 </MenuItem>
             </items>
-        </Menu>
+        </Menu> -->
         <Menu mnemonicParsing="false" text="Camera change">
             <MenuItem mnemonicParsing="false" onAction="#addCamera" text="add camera">
                 <accelerator>
