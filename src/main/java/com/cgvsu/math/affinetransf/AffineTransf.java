@@ -152,7 +152,7 @@ public class AffineTransf {
 
     public Model transformModel(Model m) {
         Model rez = new Model();
-        m = new Model();
+        //m = new Model();
         rez.polygons = new ArrayList<>(m.polygons);
         rez.textureVertices = new ArrayList<>(m.textureVertices);
         //Полигоны и текстурные вершины не изменяются

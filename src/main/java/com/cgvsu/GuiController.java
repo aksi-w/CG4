@@ -80,13 +80,16 @@ public class GuiController {
     private final List<String> namesCamera = new ArrayList<>();
     private Model originalModel = null;
 
+    private Camera camera = new Camera(new Vector3f(0, 00, 100),
+            new Vector3f(0, 0, 0),
+            1.0F, 1, 0.01F, 100);
 
 
 
-    private List<Camera> camera = new ArrayList<>(Arrays.asList(new Camera(
+    /**private List<Camera> cameraList = new ArrayList<>(Arrays.asList(new Camera(
             new Vector3f(0, 00, 100),
             new Vector3f(0, 0, 0),
-            1.0F, 1, 0.01F, 100)));
+            1.0F, 1, 0.01F, 100)));*/
 
     GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
 
@@ -132,24 +135,24 @@ public class GuiController {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
-            canvas.setOnScroll(scrollEvent -> {
+            /**canvas.setOnScroll(scrollEvent -> {
                 handleMouseScroll(scrollEvent);
             });
             canvas.setOnMousePressed(mouseEvent -> {
                 mousePressed(mouseEvent);
-            });
+            });*/
 
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             scene.camera.setAspectRatio((float) (width / height));
 
             if (mesh.size() != 0) {
                 try {
-                    RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera.get(numberCamera), mesh.get(numberMesh), (int) width, (int) height, image);
+                    RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera, mesh.get(numberMesh), (int) width, (int) height, image);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
                 if (isStructure) {
-                    RenderEngine.render(canvas.getGraphicsContext2D(), camera.get(numberCamera), mesh.get(numberMesh), (int) width, (int) height);
+                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh.get(numberMesh), (int) width, (int) height);
                 }
 
             }
@@ -157,10 +160,7 @@ public class GuiController {
             if (canvas != null) {
                 canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
                 canvas.setOnMouseDragged(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), event2.isPrimaryButtonDown(), event2.isSecondaryButtonDown()));
-                canvas.setOnScroll(event2 -> {
-                    camera.mouseDeltaY = event2.getDeltaY();
-                    camera.handleMouseInput(event2.getX(), event2.getY(), false, false);
-                });
+                canvas.setOnScroll(scrollEvent -> handleMouseScroll(scrollEvent));
             }
         });
 
@@ -228,46 +228,46 @@ public class GuiController {
 
     @FXML
     public void handleCameraForward(ActionEvent actionEvent) {
-        Vector3f direction = Vector3f.subtraction(camera.get(numberCamera).getTarget(), camera.get(numberCamera).getPosition());
+        Vector3f direction = Vector3f.subtraction(camera.getTarget(), camera.getPosition());
         direction.normalize();
         Vector3f.multiplication(direction, -TRANSLATION);
-        camera.get(numberCamera).movePosition(direction);
+        camera.movePosition(direction);
     }
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
-        Vector3f direction = Vector3f.subtraction(camera.get(numberCamera).getTarget(), camera.get(numberCamera).getPosition());
+        Vector3f direction = Vector3f.subtraction(camera.getTarget(), camera.getPosition());
         direction.normalize();
         direction = Vector3f.multiplication(direction, TRANSLATION);
-        camera.get(numberCamera).movePosition(direction);
+        camera.movePosition(direction);
     }
 
     @FXML
     public void handleCameraLeft(ActionEvent actionEvent) {
-        Vector3f right = new Vector3f(camera.get(numberCamera).vectorX().getX(), camera.get(numberCamera).vectorX().getY(), camera.get(numberCamera).vectorX().getZ());
+        Vector3f right = new Vector3f(camera.vectorX().getX(), camera.vectorX().getY(), camera.vectorX().getZ());
 
         right.normalize();
         right = Vector3f.multiplication(right, -TRANSLATION);
-        camera.get(numberCamera).movePosition(right);
+        camera.movePosition(right);
     }
 
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
-        Vector3f right = new Vector3f(camera.get(numberCamera).vectorX().getX(), camera.get(numberCamera).vectorX().getY(), camera.get(numberCamera).vectorX().getZ());
+        Vector3f right = new Vector3f(camera.vectorX().getX(), camera.vectorX().getY(), camera.vectorX().getZ());
         right.normalize();
         right = Vector3f.multiplication(right, TRANSLATION);
-        camera.get(numberCamera).movePosition(right);
+        camera.movePosition(right);
     }
 
     @FXML
     public void handleCameraUp(ActionEvent actionEvent) {
-        camera.get(numberCamera).movePosition(new Vector3f(0, TRANSLATION, 0));
+        camera.movePosition(new Vector3f(0, TRANSLATION, 0));
     }
 
     @FXML
     public void handleCameraDown(ActionEvent actionEvent) {
-        camera.get(numberCamera).movePosition(new Vector3f(0, -TRANSLATION, 0));
+        camera.movePosition(new Vector3f(0, -TRANSLATION, 0));
     }
 
     public void loadStructure() {
@@ -296,26 +296,26 @@ public class GuiController {
 
     }
 
-    @FXML
+    /**@FXML
     public void addCamera() {
-        camera.add(new Camera(
+        cameraList.add(new Camera(
                 new Vector3f(0, 0, 100),
                 new Vector3f(0, 0, 0),
                 1.0F, 1, 0.01F, 100));
         numberCamera++;
         namesCamera.add(String.valueOf(numberCamera));
         chooseCamera.getItems().add(String.valueOf(numberCamera));
-    }
+    }*/
 
-    @FXML
+    /**@FXML
     public void deleteCamera() {
-        if (camera.size() > 1) {
-            if (numberCamera == camera.size() - 1) numberCamera--;
-            camera.remove(camera.size() - 1);
-            names.remove(camera.size() - 1);
+        if (cameraList.size() > 1) {
+            if (numberCamera == cameraList.size() - 1) numberCamera--;
+            cameraList.remove(cameraList.size() - 1);
+            names.remove(cameraList.size() - 1);
             chooseCamera.getItems().remove(numberCamera + 1);
         }
-    }
+    }*/
     public void deleteMesh() {
         if (mesh.size() > 1) {
             if (numberMesh == mesh.size() - 1) numberMesh--;
@@ -401,7 +401,7 @@ public class GuiController {
 
         // Преобразование модели
         transformModel = affineTransf.transformModel(transformModel);
-        noTransformModel = affineTransf.transformModel(noTransformModel);
+        originalModel = affineTransf.transformModel(transformModel);
 
         // Рендеринг трансформированной модели
         renderTransformedModel(transformModel);
@@ -413,16 +413,16 @@ public class GuiController {
         double width = canvas.getWidth();
         double height = canvas.getHeight();
         canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-        scene.camera.setAspectRatio((float) (width / height));
+        camera.setAspectRatio((float) (width / height));
 
         if (transformModel != null) {
             try {
-                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera.get(numberCamera), transformModel, (int) width, (int) height, image);
+                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera, transformModel, (int) width, (int) height, image);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             if (isStructure) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera.get(numberCamera), transformModel, (int) width, (int) height);
+                RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformModel, (int) width, (int) height);
             }
         }
 
@@ -463,7 +463,7 @@ public class GuiController {
     @FXML
     private void handleMouseScroll(ScrollEvent event) {
         double delta = event.getDeltaY();
-        camera.get(numberCamera).handleMouseScroll((float) delta);
+        camera.handleMouseScroll((float) delta);
     }
 
     private double startX;
@@ -483,7 +483,7 @@ public class GuiController {
             dx *= 0.05;
             dy *= 0.05;
 
-            camera.get(numberCamera).movePosition(new Vector3f((float) dx, (float) dy, 0));
+            camera.movePosition(new Vector3f((float) dx, (float) dy, 0));
             startX = endX;
             startY = endY;
         });

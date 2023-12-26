@@ -99,12 +99,12 @@
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Camera change">
-            <MenuItem mnemonicParsing="false" onAction="#addCamera" text="add camera">
+            <MenuItem mnemonicParsing="false" text="add camera">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="I" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" onAction="#deleteCamera" text="delete camera">
+            <MenuItem mnemonicParsing="false" text="delete camera">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
