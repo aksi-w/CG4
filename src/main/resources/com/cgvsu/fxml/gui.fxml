@@ -63,11 +63,11 @@
                     <KeyCodeCombination alt="UP" code="V" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </CheckMenuItem>
-            <CheckMenuItem mnemonicParsing="false" onAction="#loadLight" selected="true" text="Использовать освещение">
+            <!-- <CheckMenuItem mnemonicParsing="false" onAction="#loadLight" selected="false" text="Использовать освещение">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="B" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
-            </CheckMenuItem>
+            </CheckMenuItem> -->
             <CheckMenuItem mnemonicParsing="false" onAction="#loadTexture" selected="false" text="Использовать текстуру">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TriangulatedModelWithCorrectNormal {
-    private final Model initialModel;
+    /*private final Model initialModel;
     private final List<Polygon> triangulatedPolygons;
 
     public TriangulatedModelWithCorrectNormal(Model initialModel) {
@@ -31,5 +31,5 @@ public class TriangulatedModelWithCorrectNormal {
         }
 
         return triangulationPolygons;
-    }
+    }*/
 }

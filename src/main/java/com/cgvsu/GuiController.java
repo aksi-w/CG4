@@ -55,7 +55,7 @@ public class GuiController {
 
     final private float TRANSLATION = 0.5F;
     private boolean isStructure = false;
-    public static boolean isLight = true;
+    public static boolean isLight = false;
     private BufferedImage image = null;
 
     @FXML
@@ -187,14 +187,14 @@ public class GuiController {
 
         }
 
-        /**for (int i = 0; i < mesh.get(mesh.size() - 1).polygons.size(); i++) {
+        for (int i = 0; i < mesh.get(mesh.size() - 1).polygons.size(); i++) {
          mesh.get(mesh.size() - 1).trianglePolygons.add(new Polygon());
          mesh.get(mesh.size() - 1).trianglePolygons.get(i).getVertexIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getVertexIndices());
          mesh.get(mesh.size() - 1).trianglePolygons.get(i).getTextureVertexIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getTextureVertexIndices());
          mesh.get(mesh.size() - 1).trianglePolygons.get(i).getNormalIndices().addAll(mesh.get(mesh.size() - 1).polygons.get(i).getNormalIndices());
          }
          ArrayList<Polygon> triangles = Triangulation.triangulation(mesh.get(mesh.size() - 1).trianglePolygons);
-         mesh.get(mesh.size() - 1).setTrianglePolygons(triangles);*/
+         mesh.get(mesh.size() - 1).setTrianglePolygons(triangles);
 
     }
 
@@ -273,6 +273,7 @@ public class GuiController {
 
         if (!mesh.get(numberMesh).isTexture) {
             FileChooser fileChooser = new FileChooser();
+            //fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG (*.png)", "*.png"));
             fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG (*.jpg)", "*.jpg"));
             fileChooser.setTitle("Загрузить текстуру");
             File file = fileChooser.showOpenDialog((Stage) canvas.getScene().getWindow());

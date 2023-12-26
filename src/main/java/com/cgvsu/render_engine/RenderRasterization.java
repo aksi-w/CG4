@@ -3,7 +3,7 @@ package com.cgvsu.render_engine;
 import com.cgvsu.math.Matrix.Matrix4f;
 import com.cgvsu.math.Vector.Vector3f;
 import com.cgvsu.model.Model;
-import com.cgvsu.rasterization.Colorr;
+import com.cgvsu.rasterization.Color;
 import com.cgvsu.rasterization.GraphicsUtils;
 import com.cgvsu.rasterization.Rasterization;
 import javafx.scene.canvas.GraphicsContext;
@@ -59,7 +59,7 @@ public class RenderRasterization {
                     resultPoints.get(0).x, resultPoints.get(0).y, pointsZ.get(0),
                     resultPoints.get(1).x, resultPoints.get(1).y, pointsZ.get(1),
                     resultPoints.get(2).x, resultPoints.get(2).y, pointsZ.get(2),
-                    Colorr.RED, Colorr.RED, Colorr.RED, zBuffer, camera, image,
+                    Color.BLUE, Color.BLUE, Color.BLUE, zBuffer, camera, image,
                     mesh.textureVertices.get(mesh.trianglePolygons.get(i).getTextureVertexIndices().get(0)),
                     mesh.textureVertices.get(mesh.trianglePolygons.get(i).getTextureVertexIndices().get(1)),
                     mesh.textureVertices.get(mesh.trianglePolygons.get(i).getTextureVertexIndices().get(2)),mesh);
