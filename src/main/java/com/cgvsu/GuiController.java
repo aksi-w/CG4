@@ -153,6 +153,15 @@ public class GuiController {
                 }
 
             }
+
+            if (canvas != null) {
+                canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
+                canvas.setOnMouseDragged(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), event2.isPrimaryButtonDown(), event2.isSecondaryButtonDown()));
+                canvas.setOnScroll(event2 -> {
+                    camera.mouseDeltaY = event2.getDeltaY();
+                    camera.handleMouseInput(event2.getX(), event2.getY(), false, false);
+                });
+            }
         });
 
         timeline.getKeyFrames().add(frame);

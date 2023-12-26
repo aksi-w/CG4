@@ -165,11 +165,11 @@ public class Vector3f extends Vector implements IVector {
         this.y += other1.y;
         this.z += other1.z;
     }
-    public final void add(Vector3f other1, Vector3f other2) {
+    /**public final void add(Vector3f other1, Vector3f other2) {
         this.x = other1.x + other2.x;
         this.y = other1.y + other2.y;
         this.z = other1.z + other2.z;
-    }
+    }*/
 
     // Вычитание векторов
     public final void subtract(Vector3f other1, Vector3f other2) {
