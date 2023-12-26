@@ -13,6 +13,7 @@ public class Model {
     public ArrayList<Vector3f> normals = new ArrayList<Vector3f>();
     public ArrayList<Polygon> polygons = new ArrayList<Polygon>();
     public ArrayList<Polygon> trianglePolygons = new ArrayList<Polygon>();
+    private String name;
 
     public boolean isTexture = false;
 
@@ -21,6 +22,9 @@ public class Model {
         this.textureVertices = textureVertices;
         this.normals = normals;
         this.polygons = polygons;
+    }
+    public String getName() {
+        return name;
     }
 
     public Model() {

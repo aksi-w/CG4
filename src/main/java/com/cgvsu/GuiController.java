@@ -3,6 +3,7 @@ package com.cgvsu;
 import com.cgvsu.Scene.Scene;
 import com.cgvsu.math.Vector.Vector3f;
 import com.cgvsu.math.affinetransf.AffineTransf;
+import com.cgvsu.model.ModelController;
 import com.cgvsu.model.ModelOnScene;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.objWriter.ObjWriter;
@@ -20,6 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -71,6 +73,9 @@ public class GuiController {
     private final List<String> names = new ArrayList<>();
     private final List<String> namesCamera = new ArrayList<>();
     private Model originalModel = null;
+    private Model currentModel;
+    private Camera currentCamera;
+    private TreeView<String> models = new TreeView<>();
 
     private Camera camera = new Camera(new Vector3f(0, 00, 100),
             new Vector3f(0, 0, 0),
@@ -85,7 +90,7 @@ public class GuiController {
 
     GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
 
-
+    ModelController modelController;
     private int numberCamera = 0;
     public static int numberMesh = 0;
 
@@ -116,6 +121,7 @@ public class GuiController {
             chooseCamera.getItems().add(String.valueOf(numberCamera));
             namesCamera.add(String.valueOf(numberCamera));
         }
+        modelController = new ModelController(this, anchorPane, models);
         anchorPane.prefWidthProperty().addListener((ov, oldValue, newValue) -> canvas.setWidth(newValue.doubleValue()));
         anchorPane.prefHeightProperty().addListener((ov, oldValue, newValue) -> canvas.setHeight(newValue.doubleValue()));
         GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
@@ -137,7 +143,20 @@ public class GuiController {
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             scene.camera.setAspectRatio((float) (width / height));
 
-            if (mesh.size() != 0) {
+            for (Model model : modelController.getModelsList()) {
+                try {
+                    RenderRasterization.render(canvas.getGraphicsContext2D(),graphicsUtils, camera, model,
+                            (int) width, (int) height, image);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if(mesh.size() != 0){
+            if (isStructure) {
+                RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh.get(numberMesh), (int) width, (int) height);
+            }}
+
+            /**if (mesh.size() != 0) {
                 try {
                     RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera, mesh.get(numberMesh), (int) width, (int) height, image);
                 } catch (IOException e) {
@@ -147,7 +166,9 @@ public class GuiController {
                     RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh.get(numberMesh), (int) width, (int) height);
                 }
 
-            }
+            }*/
+
+
 
             if (canvas != null) {
                 canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
@@ -180,7 +201,11 @@ public class GuiController {
         try {
             String fileContent = Files.readString(fileName);
             originalModel = ObjReader.read(fileContent);
+            currentModel = originalModel;
             mesh.add(originalModel);
+
+            modelController.getModelsList().add(currentModel);
+
             noTransformModel = ObjReader.read(fileContent);
             names.add(file.getName());
             chooseModel.getItems().add(file.getName());
@@ -314,6 +339,7 @@ public class GuiController {
             mesh.remove(mesh.size() - 1);
             names.remove(mesh.size() - 1);
             chooseModel.getItems().remove(numberMesh + 1);
+            modelController.removeModel(currentModel);
         }
     }
 
@@ -323,14 +349,18 @@ public class GuiController {
         for (int i = 0; i < namesCamera.size(); i++) {
             if (namesCamera.get(i).equals(selectedValueCamera)) {
                 numberCamera = i;
+
             }
         }
     }
     public void choosingActualModel(ActionEvent actionEvent) {
+        selectedValueCamera = chooseCamera.getSelectionModel().getSelectedItem();
         selectedValue = chooseModel.getSelectionModel().getSelectedItem();
         for (int i = 0; i < names.size(); i++) {
             if (names.get(i).equals(selectedValue)) {
                 numberMesh = i;
+                currentModel = mesh.get(numberMesh);
+                //currentCamera = cameraList.get(numberCamera);
             }
         }
 
@@ -359,20 +389,10 @@ public class GuiController {
     public void transform(float scaleX, float scaleY, float scaleZ,
                           float rotateX, float rotateY, float rotateZ,
                           float translateX, float translateY, float translateZ) {
-        // Проверка на наличие оригинальной модели
-        /**if (originalModel == null) {
-         return;
-         */
 
         // Создание копии оригинальной модели перед каждым преобразованием
         Model transformModel = new Model();
-        transformModel = originalModel;
-
-        // Вывод начальных координат в консоль
-        System.out.println("Начальные координаты:");
-        for (Vector3f vertex : transformModel.vertices) {
-            System.out.println("X: " + vertex.getX() + ", Y: " + vertex.getY() + ", Z: " + vertex.getZ());
-        }
+        transformModel = currentModel;
 
         // Применение трансформаций к модели
         affineTransf.setSx(scaleX);
@@ -385,35 +405,12 @@ public class GuiController {
         affineTransf.setTy(translateY);
         affineTransf.setTz(translateZ);
 
-        // Вывод значений аффинных трансформаций в консоль
-        System.out.println("Трансформации:");
-        System.out.println("Scale X: " + scaleX);
-        System.out.println("Scale Y: " + scaleY);
-        System.out.println("Scale Z: " + scaleZ);
-        System.out.println("Rotate X: " + rotateX);
-        System.out.println("Rotate Y: " + rotateY);
-        System.out.println("Rotate Z: " + rotateZ);
-        System.out.println("Translate X: " + translateX);
-        System.out.println("Translate Y: " + translateY);
-        System.out.println("Translate Z: " + translateZ);
-
         // Преобразование модели
         transformModel = affineTransf.transformModel(transformModel);
-        originalModel.vertices= affineTransf.transformModel(noTransformModel).vertices;
+        currentModel.vertices= affineTransf.transformModel(currentModel).vertices;
 
-        // Вывод трансформированных координат в консоль
-        System.out.println("Трансформированные координаты:");
-        for (Vector3f vertex : transformModel.vertices) {
-            System.out.println("X: " + vertex.getX() + ", Y: " + vertex.getY() + ", Z: " + vertex.getZ());
-        }
 
-        // Рендеринг трансформированной модели
-        //renderTransformedModel(transformModel);
-        System.out.println("модель изменилась");
     }
-
-
-
 
 
     public void oldModel(ActionEvent actionEvent) {

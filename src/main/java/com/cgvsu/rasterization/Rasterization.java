@@ -104,9 +104,9 @@ public class Rasterization {
             endX = temp;
         }
 
-        for (int x = (int) startX + 1; x < endX; x++) {
+        for (int x = (int) startX + 1; x < endX && x < zBuffer.length; x++) {
             double z = MathRasterization.getZ(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), new Point3D(x3, y3, z3), x, y);
-            if (x >= 0 && y >= 0) {
+            if (x >= 0 && y >= 0 && y < zBuffer[x].length) {
                 if (zBuffer[x][y] == null || zBuffer[x][y] > Math.abs(z - camera.getPosition().getZ())) {
                     Color color = getColor(color1, color2, color3, x, y, x1, x2, x3, y1, y2, y3, image,
                             texturePoint1, texturePoint2, texturePoint3,mesh);
