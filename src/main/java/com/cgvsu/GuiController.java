@@ -1,13 +1,10 @@
 package com.cgvsu;
 
 import com.cgvsu.Scene.Scene;
-import com.cgvsu.math.Matrix.Matrix;
-import com.cgvsu.math.Vector.Vector;
 import com.cgvsu.math.Vector.Vector3f;
 import com.cgvsu.math.affinetransf.AffineTransf;
 import com.cgvsu.model.ModelOnScene;
 import com.cgvsu.model.Polygon;
-import com.cgvsu.model.TriangulatedModelWithCorrectNormal;
 import com.cgvsu.objWriter.ObjWriter;
 import com.cgvsu.objreader.IncorrectFileException;
 import com.cgvsu.rasterization.DrawUtilsJavaFX;
@@ -23,7 +20,6 @@ import javafx.event.ActionEvent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
@@ -31,9 +27,7 @@ import javafx.stage.Stage;
 import javafx.stage.FileChooser;
 import javafx.util.Duration;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.io.IOException;
@@ -41,7 +35,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import com.cgvsu.model.Model;
 import com.cgvsu.objreader.ObjReader;
@@ -49,7 +42,6 @@ import com.cgvsu.render_engine.Camera;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class GuiController {
 
@@ -86,10 +78,10 @@ public class GuiController {
 
 
 
-    /**private List<Camera> cameraList = new ArrayList<>(Arrays.asList(new Camera(
+    private List<Camera> cameraList = new ArrayList<>(Arrays.asList(new Camera(
             new Vector3f(0, 00, 100),
             new Vector3f(0, 0, 0),
-            1.0F, 1, 0.01F, 100)));*/
+            1.0F, 1, 0.01F, 100)));
 
     GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
 
@@ -189,7 +181,7 @@ public class GuiController {
             String fileContent = Files.readString(fileName);
             originalModel = ObjReader.read(fileContent);
             mesh.add(originalModel);
-            noTransformModel = originalModel;
+            noTransformModel = ObjReader.read(fileContent);
             names.add(file.getName());
             chooseModel.getItems().add(file.getName());
         } catch (IOException | IncorrectFileException exception) {
@@ -296,7 +288,7 @@ public class GuiController {
 
     }
 
-    /**@FXML
+    @FXML
     public void addCamera() {
         cameraList.add(new Camera(
                 new Vector3f(0, 0, 100),
@@ -305,9 +297,9 @@ public class GuiController {
         numberCamera++;
         namesCamera.add(String.valueOf(numberCamera));
         chooseCamera.getItems().add(String.valueOf(numberCamera));
-    }*/
+    }
 
-    /**@FXML
+    @FXML
     public void deleteCamera() {
         if (cameraList.size() > 1) {
             if (numberCamera == cameraList.size() - 1) numberCamera--;
@@ -315,7 +307,7 @@ public class GuiController {
             names.remove(cameraList.size() - 1);
             chooseCamera.getItems().remove(numberCamera + 1);
         }
-    }*/
+    }
     public void deleteMesh() {
         if (mesh.size() > 1) {
             if (numberMesh == mesh.size() - 1) numberMesh--;
@@ -370,11 +362,17 @@ public class GuiController {
         // Проверка на наличие оригинальной модели
         /**if (originalModel == null) {
          return;
-         }*/
+         */
 
         // Создание копии оригинальной модели перед каждым преобразованием
         Model transformModel = new Model();
         transformModel = originalModel;
+
+        // Вывод начальных координат в консоль
+        System.out.println("Начальные координаты:");
+        for (Vector3f vertex : transformModel.vertices) {
+            System.out.println("X: " + vertex.getX() + ", Y: " + vertex.getY() + ", Z: " + vertex.getZ());
+        }
 
         // Применение трансформаций к модели
         affineTransf.setSx(scaleX);
@@ -401,43 +399,26 @@ public class GuiController {
 
         // Преобразование модели
         transformModel = affineTransf.transformModel(transformModel);
-        originalModel = affineTransf.transformModel(transformModel);
+        originalModel.vertices= affineTransf.transformModel(noTransformModel).vertices;
+
+        // Вывод трансформированных координат в консоль
+        System.out.println("Трансформированные координаты:");
+        for (Vector3f vertex : transformModel.vertices) {
+            System.out.println("X: " + vertex.getX() + ", Y: " + vertex.getY() + ", Z: " + vertex.getZ());
+        }
 
         // Рендеринг трансформированной модели
-        renderTransformedModel(transformModel);
+        //renderTransformedModel(transformModel);
         System.out.println("модель изменилась");
     }
 
 
-    private void renderTransformedModel(Model transformModel) {
-        double width = canvas.getWidth();
-        double height = canvas.getHeight();
-        canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-        camera.setAspectRatio((float) (width / height));
 
-        if (transformModel != null) {
-            try {
-                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera, transformModel, (int) width, (int) height, image);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            if (isStructure) {
-                RenderEngine.render(canvas.getGraphicsContext2D(), camera, transformModel, (int) width, (int) height);
-            }
-        }
 
-        /**canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
-        scene.camera.setAspectRatio((float) (width / height));
 
-        if (mesh.size() != 0) {
-            try {
-                RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera.get(numberCamera), mesh.get(numberMesh), (int) width, (int) height, image);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+    public void oldModel(ActionEvent actionEvent) {
+        originalModel.vertices= noTransformModel.vertices;
 
-        }*/
-        System.out.println("изменение в рендере");
     }
     private float parseTextField(TextField textField, boolean isTranslate) {
         try {
@@ -537,6 +518,7 @@ public class GuiController {
                     (int) canvas.getHeight());
         }
     }
+
 
 
 }

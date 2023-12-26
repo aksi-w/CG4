@@ -99,16 +99,21 @@
             </items>
         </Menu>
         <Menu mnemonicParsing="false" text="Camera change">
-            <MenuItem mnemonicParsing="false" text="add camera">
+            <MenuItem mnemonicParsing="false" onAction="#addCamera" text="add camera">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="I" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
-            <MenuItem mnemonicParsing="false" text="delete camera">
+            <MenuItem mnemonicParsing="false" onAction="#deleteCamera" text="delete camera">
                 <accelerator>
                     <KeyCodeCombination alt="UP" code="O" control="UP" meta="UP" shift="UP" shortcut="UP" />
                 </accelerator>
             </MenuItem>
+            <!-- <MenuItem mnemonicParsing="false" onAction="#oldModel" text="">
+                <accelerator>
+                    <KeyCodeCombination alt="UP" code="I" control="UP" meta="UP" shift="UP" shortcut="UP" />
+                </accelerator>
+            </MenuItem> -->
 
         </Menu>
     </MenuBar>
@@ -148,7 +153,8 @@
     <TextField layoutX="630.0" layoutY="610.0" prefHeight="26.0" prefWidth="79.0" fx:id="translateX"/>
     <TextField layoutX="800.0" layoutY="610.0" prefHeight="26.0" prefWidth="79.0" fx:id="translateZ"/>
 
-    <Button layoutX="720.0" layoutY="640.0" text="Click Me" onAction="#onClick"/>
+    <Button layoutX="770.0" layoutY="640.0" text="Применить" onAction="#onClick"/>
+    <Button layoutX="650.0" layoutY="640.0" text="Исходная модель" onAction="#oldModel"/>
 
 
 
