@@ -21,7 +21,6 @@ public class Rasterization {
 
         List<Point3D> points = new ArrayList<>(Arrays.asList(p1, p2, p3));
 
-
         if (points.get(0).getY() > points.get(1).getY()) {
             Point3D tmp = points.get(1);
             points.set(1, points.get(0));
@@ -106,11 +105,13 @@ public class Rasterization {
 
         for (int x = (int) startX + 1; x < endX && x < zBuffer.length; x++) {
             double z = MathRasterization.getZ(new Point3D(x1, y1, z1), new Point3D(x2, y2, z2), new Point3D(x3, y3, z3), x, y);
+
             if (x >= 0 && y >= 0 && y < zBuffer[x].length) {
                 if (zBuffer[x][y] == null || zBuffer[x][y] > Math.abs(z - camera.getPosition().getZ())) {
+                    double limitedCosLight = Math.max(0, Math.min(1, cosLight));
                     Color color = getColor(color1, color2, color3, x, y, x1, x2, x3, y1, y2, y3, image,
                             texturePoint1, texturePoint2, texturePoint3,mesh);
-                    gr.setPixel(x, y, new Color(color.getRed() * cosLight, color.getGreen() * cosLight, color.getBlue() * cosLight));
+                    gr.setPixel(x, y, new Color(color.getRed() * limitedCosLight, color.getGreen() * limitedCosLight, color.getBlue() * limitedCosLight));
                     zBuffer[x][y] = Math.abs(z - camera.getPosition().getZ());
                 }
             }
@@ -147,13 +148,10 @@ public class Rasterization {
             float bvp = (float) (y2 - y);
             float cvp = (float) (y3 - y);
 
-            // parametric coords
             float f =  (1.0f /(float) ((x2 - x1) * (y3 - y1) - (y2 - y1) * (x3 - x1)));
             float u = (bup * cvp - bvp * cup) * f;
             float v = (cup * avp - cvp * aup) * f;
             float w = 1.0f - (u + v);
-
-            // do interpolation
 
             double uI = u * texturePoint1.getX() + v * texturePoint2.getX() + w * texturePoint3.getX();
             double vI = u * texturePoint1.getY() + v * texturePoint2.getY() + w * texturePoint3.getY();
@@ -163,13 +161,11 @@ public class Rasterization {
 
     public static Color getColorTexture(double x0, double y0, BufferedImage image) throws IOException {
 
-
         int width = image.getWidth() - 1;
         int height = image.getHeight() - 1;
         int x = (int) (x0 * width);
         int y = (int) (y0 * height);
 
-        // Getting pixel color by position x and y
         int clr = image.getRGB(x, y);
         double red = ((clr & 0x00ff0000) >> 16) / 255.0f;
         double green = ((clr & 0x0000ff00) >> 8) / 255.0f;

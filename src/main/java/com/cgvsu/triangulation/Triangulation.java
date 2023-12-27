@@ -27,23 +27,17 @@ public class Triangulation {
 
 
                 if (polygon.getTextureVertexIndices().size() != 0) {
-                    triangle.getTextureVertexIndices().add(
-                            polygon.getTextureVertexIndices().get(index));
-                    triangle.getTextureVertexIndices().add(
-                            polygon.getTextureVertexIndices().get(index + 1));
-                    triangle.getTextureVertexIndices().add(
-                            polygon.getTextureVertexIndices().get(index + 2));
+                    triangle.getTextureVertexIndices().add(polygon.getTextureVertexIndices().get(index));
+                    triangle.getTextureVertexIndices().add(polygon.getTextureVertexIndices().get(index + 1));
+                    triangle.getTextureVertexIndices().add(polygon.getTextureVertexIndices().get(index + 2));
 
                     polygon.getTextureVertexIndices().remove(index + 1);
                 }
 
                 if (polygon.getNormalIndices().size() != 0) {
-                    triangle.getNormalIndices().add(
-                            polygon.getNormalIndices().get(index));
-                    triangle.getNormalIndices().add(
-                            polygon.getNormalIndices().get(index + 1));
-                    triangle.getNormalIndices().add(
-                            polygon.getNormalIndices().get(index + 2));
+                    triangle.getNormalIndices().add(polygon.getNormalIndices().get(index));
+                    triangle.getNormalIndices().add(polygon.getNormalIndices().get(index + 1));
+                    triangle.getNormalIndices().add(polygon.getNormalIndices().get(index + 2));
 
                     polygon.getNormalIndices().remove(index + 1);
                 }

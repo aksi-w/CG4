@@ -29,8 +29,7 @@ public class MathRasterization{
                 normalCamera.getX() / normalCamera.vectorLength(normalCamera),
                 normalCamera.getY() / normalCamera.vectorLength(normalCamera),
                 normalCamera.getZ() / normalCamera.vectorLength(normalCamera));
-        double numerator = normalCameraN.getX() * normal.getX() + normalCameraN.getY() * normal.getY() +
-                normalCameraN.getZ() * normal.getZ();
+        double numerator = normalCameraN.getX() * normal.getX() + normalCameraN.getY() * normal.getY() + normalCameraN.getZ() * normal.getZ();
 
         double denominator = normal.vectorLength(normal) * normalCameraN.vectorLength(normalCameraN);
         return Math.abs(numerator / denominator);
