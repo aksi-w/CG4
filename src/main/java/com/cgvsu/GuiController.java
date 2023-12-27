@@ -60,7 +60,6 @@ public class GuiController {
     Scene scene = new Scene();
     private AffineTransf affineTransf = new AffineTransf();
 
-    //private Model transformModel = null;
     private Model noTransformModel = null;
 
     @FXML
@@ -74,7 +73,6 @@ public class GuiController {
     private final List<String> namesCamera = new ArrayList<>();
     private Model originalModel = null;
     private Model currentModel;
-    private Camera currentCamera;
     private TreeView<String> models = new TreeView<>();
 
     private Camera camera = new Camera(new Vector3f(0, 00, 100),
@@ -88,7 +86,6 @@ public class GuiController {
             new Vector3f(0, 0, 0),
             1.0F, 1, 0.01F, 100)));
 
-    GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
 
     ModelController modelController;
     private int numberCamera = 0;
@@ -133,12 +130,6 @@ public class GuiController {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
-            /**canvas.setOnScroll(scrollEvent -> {
-                handleMouseScroll(scrollEvent);
-            });
-            canvas.setOnMousePressed(mouseEvent -> {
-                mousePressed(mouseEvent);
-            });*/
 
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             scene.camera.setAspectRatio((float) (width / height));
@@ -156,20 +147,6 @@ public class GuiController {
                 RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh.get(numberMesh), (int) width, (int) height);
             }}
 
-            /**if (mesh.size() != 0) {
-                try {
-                    RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera, mesh.get(numberMesh), (int) width, (int) height, image);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                if (isStructure) {
-                    RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh.get(numberMesh), (int) width, (int) height);
-                }
-
-            }*/
-
-
-
             if (canvas != null) {
                 canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
                 canvas.setOnMouseDragged(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), event2.isPrimaryButtonDown(), event2.isSecondaryButtonDown()));
@@ -182,7 +159,6 @@ public class GuiController {
 
 
     }
-
 
     @FXML
     private void onOpenModelMenuItemClick() {
@@ -390,11 +366,9 @@ public class GuiController {
                           float rotateX, float rotateY, float rotateZ,
                           float translateX, float translateY, float translateZ) {
 
-        // Создание копии оригинальной модели перед каждым преобразованием
         Model transformModel = new Model();
         transformModel = currentModel;
 
-        // Применение трансформаций к модели
         affineTransf.setSx(scaleX);
         affineTransf.setSy(scaleY);
         affineTransf.setSz(scaleZ);
@@ -405,7 +379,6 @@ public class GuiController {
         affineTransf.setTy(translateY);
         affineTransf.setTz(translateZ);
 
-        // Преобразование модели
         transformModel = affineTransf.transformModel(transformModel);
         currentModel.vertices= affineTransf.transformModel(currentModel).vertices;
 
@@ -430,8 +403,6 @@ public class GuiController {
 
     public void onClick(ActionEvent actionEvent) {
 
-        //String text = scaleX.getText();
-        //parseTextField(scaleX, false);
         transform(
                 parseTextField(scaleX, false), parseTextField(scaleY, false), parseTextField(scaleZ, false),
                 parseTextField(rotateX, false), parseTextField(rotateY, false), parseTextField(rotateZ, false),
@@ -468,13 +439,6 @@ public class GuiController {
     }
 
 
-//    @FXML
-//    private void handleKeyPress(KeyEvent event) {
-//        String direction = event.getCode().toString();
-//        camera.get(numberCamera).handleKeyPress(direction);
-//    }
-
-
     @FXML
     public void handleModelRight(ActionEvent actionEvent) {
         for (ModelOnScene model : scene.modelsList) {
@@ -492,20 +456,6 @@ public class GuiController {
                     (int) canvas.getHeight());
         }
     }
-    public void handleModelLeft(ActionEvent actionEvent) {
-        /**for (ModelOnScene model : scene.modelsList) {
-         model.setTranslationX(TRANSLATION);
-         //RenderEngine.render(canvas.getGraphicsContext2D(), scene.camera, model, (int) canvas.getWidth(), (int) canvas.getHeight());
-         System.out.println("");
-         //camera.get(numberCamera).movePosition(new Vector3f(0, TRANSLATION, 0));
-         }*/
-        affineTransf.setTx(-TRANSLATION);
-        /**if (transformModel == null) {
-         transformModel = new Model(noTransformModel);
-         }*/
-
-        //transformModel = affineTransf.transformModel(transformModel);
-    }
 
     @FXML
     public void handleModelForward(ActionEvent actionEvent) {
@@ -515,7 +465,4 @@ public class GuiController {
                     (int) canvas.getHeight());
         }
     }
-
-
-
 }
