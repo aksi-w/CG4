@@ -203,7 +203,7 @@ public class Camera {
 // Передвижение камеры в зависимости от движения колесика мыши
             if (mouseDeltaY > 0) {
                 Vector3f lala = Vector3f.division(target, 75);
-                position.subtractThis(Vector3f.subtraction(position, lala));
+                position.subtractThis(Vector3f.subtraction(position, lala));//p-=p-lala=lala
             } else if (mouseDeltaY < 0) {
                 Vector3f lala = Vector3f.division(target, 75);
                 position.addThis(Vector3f.subtraction(position, lala));

@@ -2,9 +2,19 @@ package com.cgvsu.math.Vector;
 
 import java.util.List;
 
-public class Vector3f extends Vector implements IVector {
+public class Vector3f {
 
     private float x;
+
+    @Override
+    public String toString() {
+        return "Vector3f{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
+
     private float y;
     private float z;
     private static final float eps = 1e-7f;
@@ -32,15 +42,15 @@ public class Vector3f extends Vector implements IVector {
         return z;
     }
 
-    @Override
-    public float[] getValues() {
-        return new float[0];
-    }
 
-    @Override
-    public int getSize() {
-        return 0;
-    }
+    /**public float[] getValues() {
+     return new float[0];
+     }
+
+     @Override
+     public int getSize() {
+     return 0;
+     }*/
 
     public boolean equals(Vector3f other) {
         return Math.abs(x - other.getX()) < eps && Math.abs(y - other.getY()) < eps && Math.abs(z - other.getZ()) < eps;
@@ -94,7 +104,7 @@ public class Vector3f extends Vector implements IVector {
         }
     }
 
-     public static float scalar(Vector3f vector1, Vector3f vector2) {
+    public static float scalar(Vector3f vector1, Vector3f vector2) {
         return vector1.getX() * vector2.getX() + vector1.getY() * vector2.getY() + vector1.getZ() * vector2.getZ();
     }
 
@@ -166,10 +176,10 @@ public class Vector3f extends Vector implements IVector {
         this.z += other1.z;
     }
     /**public final void add(Vector3f other1, Vector3f other2) {
-        this.x = other1.x + other2.x;
-        this.y = other1.y + other2.y;
-        this.z = other1.z + other2.z;
-    }*/
+     this.x = other1.x + other2.x;
+     this.y = other1.y + other2.y;
+     this.z = other1.z + other2.z;
+     }*/
 
     // Вычитание векторов
     public final void subtract(Vector3f other1, Vector3f other2) {

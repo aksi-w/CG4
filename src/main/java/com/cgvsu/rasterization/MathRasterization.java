@@ -25,13 +25,16 @@ public class MathRasterization{
                 camera.getTarget().getX() - camera.getPosition().getX(),
                 camera.getTarget().getY() - camera.getPosition().getY(),
                 camera.getTarget().getZ() - camera.getPosition().getZ());
-        Vector3f normalCameraN = new Vector3f(
-                normalCamera.getX() / normalCamera.vectorLength(normalCamera),
-                normalCamera.getY() / normalCamera.vectorLength(normalCamera),
-                normalCamera.getZ() / normalCamera.vectorLength(normalCamera));
+        Vector3f normalCameraN = normalCamera.normalize();
+
+        /**normalCamera.getX() / normalCamera.(normalCamera),
+         normalCamera.getY() / normalCamera.vectorLength(normalCamera),
+         normalCamera.getZ() / normalCamera.vectorLength(normalCamera));*/
         double numerator = normalCameraN.getX() * normal.getX() + normalCameraN.getY() * normal.getY() + normalCameraN.getZ() * normal.getZ();
 
-        double denominator = normal.vectorLength(normal) * normalCameraN.vectorLength(normalCameraN);
+        //double denominator = normal.vectorLength(normal) * normalCameraN.vectorLength(normalCameraN);
+        double denominator = Vector3f.lengthVector(normal) * Vector3f.lengthVector(normalCameraN);
         return Math.abs(numerator / denominator);
+        //return 1;
     }
 }

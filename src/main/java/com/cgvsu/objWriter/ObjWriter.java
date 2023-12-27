@@ -43,21 +43,21 @@ public class ObjWriter {
     }
 
     /**public static ArrayList<String> write(Model mesh) {
-        ArrayList<String> listFileContent = new ArrayList<>();
+     ArrayList<String> listFileContent = new ArrayList<>();
 
-        writeVertices(listFileContent,mesh.vertices);
-        listFileContent.add("# " + mesh.vertices.size() + " vertices");
+     writeVertices(listFileContent,mesh.vertices);
+     listFileContent.add("# " + mesh.vertices.size() + " vertices");
 
-        writeTextureVertices(mesh.textureVertices, listFileContent);
-        listFileContent.add("# " + mesh.textureVertices.size() + " texture coordinates");
+     writeTextureVertices(mesh.textureVertices, listFileContent);
+     listFileContent.add("# " + mesh.textureVertices.size() + " texture coordinates");
 
-        writeNormals(mesh.normals, listFileContent);
-        listFileContent.add("# " + mesh.normals.size() + " vertices");
+     writeNormals(mesh.normals, listFileContent);
+     listFileContent.add("# " + mesh.normals.size() + " vertices");
 
-        writePolygons(mesh.polygons, listFileContent);
-        listFileContent.add("# " + mesh.polygons.size() + " polygons");
-        return listFileContent;
-    }*/
+     writePolygons(mesh.polygons, listFileContent);
+     listFileContent.add("# " + mesh.polygons.size() + " polygons");
+     return listFileContent;
+     }*/
 
     protected static void writeVertices(PrintWriter pw, List<Vector3f> vertices) throws IOException {
         for (Vector3f vertex: vertices) {
