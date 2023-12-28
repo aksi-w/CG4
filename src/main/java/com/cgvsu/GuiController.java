@@ -4,7 +4,6 @@ import com.cgvsu.Scene.Scene;
 import com.cgvsu.math.Vector.Vector3f;
 import com.cgvsu.math.affinetransf.AffineTransf;
 import com.cgvsu.model.ModelController;
-import com.cgvsu.model.ModelOnScene;
 import com.cgvsu.model.Polygon;
 import com.cgvsu.objWriter.ObjWriter;
 import com.cgvsu.objreader.IncorrectFileException;
@@ -22,7 +21,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -46,24 +44,17 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 
 public class GuiController {
-
     final private float TRANSLATION = 0.5F;
     private boolean isStructure = false;
     public static boolean isLight = false;
     private BufferedImage image = null;
-
     @FXML
     AnchorPane anchorPane;
-
     @FXML
     private Canvas canvas;
     Scene scene = new Scene();
     private AffineTransf affineTransf = new AffineTransf();
-
-    //private Model transformModel = null;
     private Model noTransformModel = null;
-    private Model originalModelCopy = null;
-
     @FXML
     private ComboBox<String> chooseModel;
     @FXML
@@ -75,28 +66,20 @@ public class GuiController {
     private final List<String> namesCamera = new ArrayList<>();
     private Model originalModel = null;
     private Model currentModel;
-    private Camera currentCamera;
     private TreeView<String> models = new TreeView<>();
-
     private Camera camera = new Camera(new Vector3f(0, 00, 100),
-            new Vector3f(0, 0, 0),
+            new Vector3f(0, 10, 0),
             1.0F, 1, 0.01F, 100);
-
-
 
     private List<Camera> cameraList = new ArrayList<>(Arrays.asList(new Camera(
             new Vector3f(0, 00, 100),
             new Vector3f(0, 0, 0),
             1.0F, 1, 0.01F, 100)));
-
-    GraphicsUtils<Canvas> graphicsUtils = new DrawUtilsJavaFX(canvas);
-
     ModelController modelController;
     private int numberCamera = 0;
     public static int numberMesh = 0;
 
     private Timeline timeline;
-    private TextField setSX;
     @FXML
     private TextField scaleX;
     @FXML
@@ -134,42 +117,22 @@ public class GuiController {
             double width = canvas.getWidth();
             double height = canvas.getHeight();
 
-            /**canvas.setOnScroll(scrollEvent -> {
-             handleMouseScroll(scrollEvent);
-             });
-             canvas.setOnMousePressed(mouseEvent -> {
-             mousePressed(mouseEvent);
-             });*/
-
             canvas.getGraphicsContext2D().clearRect(0, 0, width, height);
             scene.camera.setAspectRatio((float) (width / height));
 
             for (Model model : modelController.getModelsList()) {
                 try {
-                    RenderRasterization.render(canvas.getGraphicsContext2D(),graphicsUtils, camera, model,
+                    RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera, model,
                             (int) width, (int) height, image);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
-            if(mesh.size() != 0){
+            if (mesh.size() != 0) {
                 if (isStructure) {
                     RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh.get(numberMesh), (int) width, (int) height);
-                }}
-
-            /**if (mesh.size() != 0) {
-             try {
-             RenderRasterization.render(canvas.getGraphicsContext2D(), graphicsUtils, camera, mesh.get(numberMesh), (int) width, (int) height, image);
-             } catch (IOException e) {
-             throw new RuntimeException(e);
-             }
-             if (isStructure) {
-             RenderEngine.render(canvas.getGraphicsContext2D(), camera, mesh.get(numberMesh), (int) width, (int) height);
-             }
-
-             }*/
-
-
+                }
+            }
 
             if (canvas != null) {
                 canvas.setOnMouseMoved(event2 -> camera.handleMouseInput(event2.getX(), event2.getY(), false, false));
@@ -180,8 +143,6 @@ public class GuiController {
 
         timeline.getKeyFrames().add(frame);
         timeline.play();
-
-
     }
 
 
@@ -198,7 +159,6 @@ public class GuiController {
 
         Path fileName = Path.of(file.getAbsolutePath());
 
-
         try {
             String fileContent = Files.readString(fileName);
             originalModel = ObjReader.read(fileContent);
@@ -211,7 +171,6 @@ public class GuiController {
             names.add(file.getName());
             chooseModel.getItems().add(file.getName());
         } catch (IOException | IncorrectFileException exception) {
-
         }
 
         for (int i = 0; i < mesh.get(mesh.size() - 1).polygons.size(); i++) {
@@ -234,7 +193,6 @@ public class GuiController {
         if (selectedFile != null) {
             try {
                 Model model = new Model();
-                //model = ;
                 ObjWriter.write(selectedFile, model);
                 JOptionPane.showMessageDialog(null, "Модель успешно сохранена");
             } catch (Exception e) {
@@ -243,7 +201,6 @@ public class GuiController {
             }
         }
     }
-
 
     @FXML
     public void handleCameraBackward(ActionEvent actionEvent) {
@@ -261,7 +218,6 @@ public class GuiController {
         right = Vector3f.multiplication(right, -TRANSLATION);
         camera.movePosition(right);
     }
-
 
     @FXML
     public void handleCameraRight(ActionEvent actionEvent) {
@@ -288,6 +244,7 @@ public class GuiController {
     public void loadLight() {
         isLight = !isLight;
     }
+
     @FXML
     private void loadTexture() throws IOException {
 
@@ -327,6 +284,7 @@ public class GuiController {
             chooseCamera.getItems().remove(numberCamera + 1);
         }
     }
+
     public void deleteMesh() {
         if (mesh.size() > 1) {
             if (numberMesh == mesh.size() - 1) numberMesh--;
@@ -347,6 +305,7 @@ public class GuiController {
             }
         }
     }
+
     public void choosingActualModel(ActionEvent actionEvent) {
         selectedValueCamera = chooseCamera.getSelectionModel().getSelectedItem();
         selectedValue = chooseModel.getSelectionModel().getSelectedItem();
@@ -357,28 +316,7 @@ public class GuiController {
                 //currentCamera = cameraList.get(numberCamera);
             }
         }
-
     }
-
-//    public void updateScale(float scaleX, float scaleY, float scaleZ) {
-//        affineTransf.setSx(scaleX);
-//        affineTransf.setSy(scaleY);
-//        affineTransf.setSz(scaleZ);
-//    }
-//
-//    public void updateRotation(float rotateX, float rotateY, float rotateZ) {
-//        affineTransf.setRx(rotateX);
-//        affineTransf.setRy(rotateY);
-//        affineTransf.setRz(rotateZ);
-//    }
-//
-//
-//    public void updateTranslation(float translateX, float translateY, float translateZ) {
-//        affineTransf.setTx(translateX);
-//        affineTransf.setTy(translateY);
-//        affineTransf.setTz(translateZ);
-//    }
-
 
     public void transform(float scaleX, float scaleY, float scaleZ,
                           float rotateX, float rotateY, float rotateZ,
@@ -401,16 +339,14 @@ public class GuiController {
 
         // Преобразование модели
         transformModel = affineTransf.transformModel(transformModel);
-        currentModel.vertices= affineTransf.transformModel(currentModel).vertices;
-
+        currentModel.vertices = affineTransf.transformModel(currentModel).vertices;
 
     }
-
 
     public void oldModel(ActionEvent actionEvent) {
-        currentModel.vertices= noTransformModel.vertices;
-
+        currentModel.vertices = noTransformModel.vertices;
     }
+
     private float parseTextField(TextField textField, boolean isTranslate) {
         try {
             return Float.parseFloat(textField.getText());
@@ -424,43 +360,16 @@ public class GuiController {
 
     public void onClick(ActionEvent actionEvent) {
 
-        //String text = scaleX.getText();
-        //parseTextField(scaleX, false);
         transform(
                 parseTextField(scaleX, false), parseTextField(scaleY, false), parseTextField(scaleZ, false),
                 parseTextField(rotateX, false), parseTextField(rotateY, false), parseTextField(rotateZ, false),
                 parseTextField(translateX, true), parseTextField(translateY, true), parseTextField(translateZ, true)
         );
     }
+
     @FXML
     private void handleMouseScroll(ScrollEvent event) {
         double delta = event.getDeltaY();
         camera.handleMouseScroll((float) delta);
     }
-
-    private double startX;
-    private double startY;
-
-    @FXML
-    private void mousePressed(MouseEvent mouseEvent) {
-        startX = mouseEvent.getX();
-        startY = mouseEvent.getY();
-
-        canvas.setOnMouseDragged(mouseEvent1 -> {
-            double endX = mouseEvent1.getX();
-            double endY = mouseEvent1.getY();
-            double dx = startX - endX;
-            double dy = endY - startY;
-
-            dx *= 0.05;
-            dy *= 0.05;
-
-            camera.movePosition(new Vector3f((float) dx, (float) dy, 0));
-            startX = endX;
-            startY = endY;
-        });
-    }
-
-
-
 }

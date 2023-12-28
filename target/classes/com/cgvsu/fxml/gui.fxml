@@ -133,28 +133,28 @@
     <Label layoutX="92.0" layoutY="77.0" />
     <Canvas fx:id="canvas" height="765.0" layoutY="135.0" width="1600" AnchorPane.topAnchor="30.0" />
 
-    <Label layoutX="635.0" layoutY="530.0" prefHeight="23.0" prefWidth="90.0" text="X:" textOverrun="CLIP" wrapText="true"/>
-    <Label layoutX="720.0" layoutY="530.0" prefHeight="23.0" prefWidth="90.0" text="Y:" textOverrun="CLIP" wrapText="true"/>
-    <Label layoutX="805.0" layoutY="530.0" prefHeight="23.0" prefWidth="90.0" text="Z:" textOverrun="CLIP" wrapText="true"/>
+    <Label layoutX="770.0" layoutY="645.0" prefHeight="23.0" prefWidth="90.0" text="X:" textOverrun="CLIP" wrapText="true" />
+    <Label layoutX="850.0" layoutY="645.0" prefHeight="23.0" prefWidth="90.0" text="Y:" textOverrun="CLIP" wrapText="true" />
+    <Label layoutX="940.0" layoutY="645.0" prefHeight="23.0" prefWidth="90.0" text="Z:" textOverrun="CLIP" wrapText="true" />
 
-    <Label layoutX="570.0" layoutY="550.0" prefHeight="23.0" prefWidth="90.0" text="Масштаб" textOverrun="CLIP" wrapText="true"/>
-    <Label layoutX="570.0" layoutY="580.0" prefHeight="23.0" prefWidth="90.0" text="Поворот" textOverrun="CLIP" wrapText="true"/>
-    <Label layoutX="570.0" layoutY="610.0" prefHeight="23.0" prefWidth="90.0" text="Перенос" textOverrun="CLIP" wrapText="true"/>
+    <Label layoutX="700.0" layoutY="665.0" prefHeight="23.0" prefWidth="90.0" text="Масштаб" textOverrun="CLIP" wrapText="true" />
+    <Label layoutX="700.0" layoutY="695.0" prefHeight="23.0" prefWidth="90.0" text="Поворот" textOverrun="CLIP" wrapText="true" />
+    <Label layoutX="700.0" layoutY="725.0" prefHeight="23.0" prefWidth="90.0" text="Перенос" textOverrun="CLIP" wrapText="true" />
 
-    <TextField layoutX="715.0" layoutY="550.0" prefHeight="26.0" prefWidth="79.0" fx:id="scaleY" />
-    <TextField layoutX="630.0" layoutY="550.0" prefHeight="26.0" prefWidth="79.0" fx:id="scaleX"/>
-    <TextField layoutX="800.0" layoutY="550.0" prefHeight="26.0" prefWidth="79.0" fx:id="scaleZ"/>
+    <TextField fx:id="scaleY" layoutX="840.0" layoutY="665.0" prefHeight="26.0" prefWidth="79.0" />
+    <TextField fx:id="scaleX" layoutX="755.0" layoutY="665.0" prefHeight="26.0" prefWidth="79.0" />
+    <TextField fx:id="scaleZ" layoutX="925.0" layoutY="665.0" prefHeight="26.0" prefWidth="79.0" />
 
-    <TextField layoutX="715.0" layoutY="580.0" prefHeight="26.0" prefWidth="79.0" fx:id="rotateY"/>
-    <TextField layoutX="630.0" layoutY="580.0" prefHeight="26.0" prefWidth="79.0" fx:id="rotateX"/>
-    <TextField layoutX="800.0" layoutY="580.0" prefHeight="26.0" prefWidth="79.0" fx:id="rotateZ"/>
+    <TextField fx:id="rotateY" layoutX="840.0" layoutY="695.0" prefHeight="26.0" prefWidth="79.0" />
+    <TextField fx:id="rotateX" layoutX="755.0" layoutY="695.0" prefHeight="26.0" prefWidth="79.0" />
+    <TextField fx:id="rotateZ" layoutX="925.0" layoutY="695.0" prefHeight="26.0" prefWidth="79.0" />
 
-    <TextField layoutX="715.0" layoutY="610.0" prefHeight="26.0" prefWidth="79.0" fx:id="translateY"/>
-    <TextField layoutX="630.0" layoutY="610.0" prefHeight="26.0" prefWidth="79.0" fx:id="translateX"/>
-    <TextField layoutX="800.0" layoutY="610.0" prefHeight="26.0" prefWidth="79.0" fx:id="translateZ"/>
+    <TextField fx:id="translateY" layoutX="840.0" layoutY="725.0" prefHeight="26.0" prefWidth="79.0" />
+    <TextField fx:id="translateX" layoutX="755.0" layoutY="725.0" prefHeight="26.0" prefWidth="79.0" />
+    <TextField fx:id="translateZ" layoutX="925.0" layoutY="725.0" prefHeight="26.0" prefWidth="79.0" />
 
-    <Button layoutX="770.0" layoutY="640.0" text="Применить" onAction="#onClick"/>
-    <Button layoutX="650.0" layoutY="640.0" text="Исходная модель" onAction="#oldModel"/>
+    <Button layoutX="906.0" layoutY="753.0" onAction="#onClick" prefHeight="25.0" prefWidth="90.0" text="Применить" />
+    <Button layoutX="770.0" layoutY="753.0" onAction="#oldModel" prefHeight="25.0" prefWidth="125.0" text="Исходная модель" />
 
 
 
