@@ -5,29 +5,18 @@ import java.util.List;
 public class Vector3f {
 
     private float x;
-
-    @Override
-    public String toString() {
-        return "Vector3f{" +
-                "x=" + x +
-                ", y=" + y +
-                ", z=" + z +
-                '}';
-    }
-
     private float y;
     private float z;
     private static final float eps = 1e-7f;
 
-    public Vector3f() {
-        super();
-    }
-
     public Vector3f(float x, float y, float z) {
-        this();
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public Vector3f() {
+
     }
 
     public float getX() {
@@ -42,15 +31,6 @@ public class Vector3f {
         return z;
     }
 
-
-    /**public float[] getValues() {
-     return new float[0];
-     }
-
-     @Override
-     public int getSize() {
-     return 0;
-     }*/
 
     public boolean equals(Vector3f other) {
         return Math.abs(x - other.getX()) < eps && Math.abs(y - other.getY()) < eps && Math.abs(z - other.getZ()) < eps;
@@ -116,55 +96,7 @@ public class Vector3f {
         return new Vector3f(resX, resY, resZ);
     }
 
-    public static Vector3f fromTwoPoints(Vector3f vertex1, Vector3f vertex2) {
-        return new Vector3f(vertex2.x - vertex1.x,
-                vertex2.y - vertex1.y,
-                vertex2.z - vertex1.z);
-    }
-
-    public float length() {
-        return (float) Math.sqrt(this.x * this.x + this.y * this.y + this.z * this.z);
-    }
-
-    public static Vector3f sum(List<Vector3f> vectors) {
-        final var result = new Vector3f();
-
-        vectors.forEach(result::add);
-
-        return result;
-    }
-
-    public void add(Vector3f t1, Vector3f t2) {
-        if (t1 == null || t2 == null) {
-            throw new IllegalArgumentException("Vector3f can not be null");
-        }
-
-        this.x = t1.x + t2.x;
-        this.y = t1.y + t2.y;
-        this.z = t1.z + t2.z;
-    }
-
-    public void add(Vector3f t1) {
-        if (t1 == null) {
-            throw new IllegalArgumentException("Vector3f can not be null");
-        }
-
-        this.x += t1.x;
-        this.y += t1.y;
-        this.z += t1.z;
-    }
-
-    public Vector3f divide(float num) {
-        if (isEqual(num, 0))
-            throw new ArithmeticException("Division by zero");
-
-        return new Vector3f(x / num, y / num, z / num);
-    }
-
-    public static boolean isEqual(float x, float y){
-        return Math.abs(x-y) < eps;
-    }
-
+    // методы для камеры
     public final void subtractThis(Vector3f other1) {
         this.x -= other1.x;
         this.y -= other1.y;
@@ -174,17 +106,5 @@ public class Vector3f {
         this.x += other1.x;
         this.y += other1.y;
         this.z += other1.z;
-    }
-    /**public final void add(Vector3f other1, Vector3f other2) {
-     this.x = other1.x + other2.x;
-     this.y = other1.y + other2.y;
-     this.z = other1.z + other2.z;
-     }*/
-
-    // Вычитание векторов
-    public final void subtract(Vector3f other1, Vector3f other2) {
-        this.x = other1.x - other2.x;
-        this.y = other1.y - other2.y;
-        this.z = other1.z - other2.z;
     }
 }
