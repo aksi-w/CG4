@@ -1,14 +1,8 @@
 package com.cgvsu.triangulation;
 
-import com.cgvsu.math.Vector.Vector3f;
-import com.cgvsu.model.Model;
 import com.cgvsu.model.Polygon;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import static com.cgvsu.math.Vector.Vector3f.fromTwoPoints;
-import static com.cgvsu.math.Vector.Vector3f.sum;
 
 public class Triangulation {
 
